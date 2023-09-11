@@ -11,16 +11,17 @@ class ProductManager {
 
     addProduct(title, description, price, thumbnail, code, stock) {
 
+        // First Validate if we have all the required fields
+        if (!title || !description || !price || !thumbnail || !code || stock === undefined) {
+            console.error("Hey!!! You are missing one or more required fields. Please provide values for title, description, price, thumbnail, code, and stock to continue.")
+            return
+          }
+
         // Verify if the code is already in use
         const isCodeInUse = this.products.some((product) => product.code === code)
         if (isCodeInUse) {
             throw new Error(`The code ${code} is already in use Code must be unique.`)
         }
-
-        if (!title || !description || !price || !thumbnail || !code || stock === undefined) {
-            console.error("Hey!!! You are missing one or more required fields. Please provide values for title, description, price, thumbnail, code, and stock to continue.")
-            return
-          }
 
         const product = {
             id: this.productIdCounter,
