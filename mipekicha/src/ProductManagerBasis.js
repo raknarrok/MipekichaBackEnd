@@ -17,6 +17,11 @@ class ProductManager {
             throw new Error(`The code ${code} is already in use Code must be unique.`)
         }
 
+        if (!title || !description || !price || !thumbnail || !code || stock === undefined) {
+            console.error("Hey!!! You are missing one or more required fields. Please provide values for title, description, price, thumbnail, code, and stock to continue.")
+            return
+          }
+
         const product = {
             id: this.productIdCounter,
             title,
@@ -94,6 +99,9 @@ console.log(listElements.getProductByCode("CA"))
 // Search Non Existing element by Id
 console.log(`Search Element by Id`)
 console.log(listElements.getProductByCode("NoExistsNumber"))
+
+// Show a message in case to missing required fields
+listElements.addProduct("Collar Ancho", "1 ½ pulgada de ancho Nombre y 1 numero de tel bordado", 300, "https://raknarrok.github.io/static/images/productos/collares/ancho.png", "")
 
 // Dropping error when trying to add a product with a code already in use
 listElements.addProduct("Collar Ancho", "1 ½ pulgada de ancho Nombre y 1 numero de tel bordado", 300, "https://raknarrok.github.io/static/images/productos/collares/ancho.png", "CA", 30)
