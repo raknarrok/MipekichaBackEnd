@@ -3,15 +3,15 @@ Go to cd mipekicha/src
 Run node ProductManagerBasisV2.js
 */
 const fs = require('fs')
-const filePath = './products.txt'
 
 class ProductManagerV2 {
-    constructor() {
-        this.products = []
+    constructor(filePath) {
         this.productIdCounter = 1
+        this.filePath = filePath
+        this.products = this.checkFile()
     }
 
-    addProduct(title, description, price, thumbnail, code, stock) {
+    addProduct({ title, description, price, thumbnail, code, stock }) {
 
         // First Validate if we have all the required fields
         if (!title || !description || !price || !thumbnail || !code || stock === undefined) {
@@ -20,12 +20,10 @@ class ProductManagerV2 {
         }
 
         // Read the file and parse the content to an array
-        const fileContent = fs.readFileSync(filePath, 'utf8')
+        const fileContent = this.checkFile()
 
         // Verify if the file is empty.
         if (fileContent) {
-            // If the file is not empty, parse the content to an array
-            this.products = JSON.parse(fileContent)
             // Verify if the code is already in use
             const isCodeInUse = this.products.some((product) => product.code === code)
             if (isCodeInUse) {
@@ -42,7 +40,7 @@ class ProductManagerV2 {
                 stock,
             }
             this.products.push(product)
-            fs.writeFileSync(filePath, JSON.stringify(this.products, null, 2))
+            this.saveFile()
             this.productIdCounter++
         } else {
             // If the file is empty, create an array with the first product
@@ -56,20 +54,28 @@ class ProductManagerV2 {
                 stock,
             }
             this.products.push(product)
-            fs.writeFileSync(filePath, JSON.stringify(this.products, null, 2))
+            this.saveFile()
             this.productIdCounter++
         }
     }
 
     removeProductByCode(code) {
-        const fileContent = fs.readFileSync(filePath, 'utf8')
-        this.products = JSON.parse(fileContent)
         const index = this.products.findIndex((product) => product.code === code)
         if (index !== -1) {
             this.products.splice(index, 1)
-            fs.writeFileSync('./products.txt', JSON.stringify(this.products, null, 2))
+            this.saveFile()
         } else {
             throw new Error(`The code ${code} doesnt exist, please verify and try again.`)
+        }
+    }
+
+    removeProductById(id) {
+        const index = this.products.findIndex((product) => product.id === id)
+        if (index !== -1) {
+            this.products.splice(index, 1)
+            this.saveFile()
+        } else {
+            throw new Error(`The id ${id} doesnt exist, please verify and try again.`)
         }
     }
 
@@ -78,8 +84,6 @@ class ProductManagerV2 {
     }
 
     getProductByCode(code) {
-        const fileContent = fs.readFileSync(filePath, 'utf8')
-        this.products = JSON.parse(fileContent)
         const product = this.products.find((product) => product.code === code)
         if (!product) {
             return "Not Found"
@@ -88,12 +92,18 @@ class ProductManagerV2 {
     }
 
     updateProductByCode(code, updatedProduct) {
-        const fileContent = fs.readFileSync(filePath, 'utf8')
-        this.products = JSON.parse(fileContent)
         const index = this.products.findIndex((product) => product.code === code)
         if (index !== -1) {
             this.products[index] = { ...this.products[index], ...updatedProduct }
-            fs.writeFileSync('./products.txt', JSON.stringify(this.products, null, 2))
+            this.saveFile()
+        }
+    }
+
+    updateProductById(id, updatedProduct) {
+        const index = this.products.findIndex((product) => product.id === id)
+        if (index !== -1) {
+            this.products[index] = { ...this.products[index], ...updatedProduct }
+            this.saveFile()
         }
     }
 
@@ -102,27 +112,85 @@ class ProductManagerV2 {
     }
 
     getAllProducts() {
-        // Read the file and parse the content to an array
-        const fileContent = fs.readFileSync(filePath, 'utf8')
-        // Verify if the file is empty.
-        if (!fileContent) {
+        return this.products
+    }
+
+    checkFile() {
+        try {
+            // Read the file and parse the content to an array
+            const fileContent = fs.readFileSync(this.filePath, 'utf8')
+            // Verify if the file is empty.
+            if (!fileContent) {
+                return []
+            }
+
+            return JSON.parse(fileContent) || []
+        } catch (error) {
+            console.error(error)
             return []
         }
+    }
 
-        return JSON.parse(fileContent)
+    saveFile() {
+        fs.writeFileSync(this.filePath, JSON.stringify(this.products, null, 2))
     }
 }
 
+listElements = new ProductManagerV2('./products.txt')
 
-listElements = new ProductManagerV2()
+// Products Creation Section
+const productOne = {
+    title: "Collar Slim",
+    description: "½ pulgada de ancho Nombre y 1 numero de tel bordado",
+    price: 100,
+    thumbnail: "https://raknarrok.github.io/static/images/productos/collares/slim.png",
+    code: "CXS",
+    stock: 10
+}
+
+const productTwo = {
+    title: "Collar Normal",
+    description: "1 pulgada de ancho Nombre y 1 numero de tel bordado",
+    price: 200,
+    thumbnail: "https://raknarrok.github.io/static/images/productos/collares/normal.png",
+    code: "CN",
+    stock: 10
+}
+
+const productThree = {
+    title: "Collar Ancho",
+    description: "1 ½ pulgada de ancho Nombre y 1 numero de tel bordado",
+    price: 200,
+    thumbnail: "https://raknarrok.github.io/static/images/productos/collares/ancho.png",
+    code: "CA",
+    stock: 30
+}
+
+const productFour = {
+    title: "Collar Especial",
+    description: "Diferentes anchos, colores y diseños. Nombre y 1 numero de tel bordado",
+    price: 450,
+    thumbnail: "https://raknarrok.github.io/static/images/productos/collares/ancho.png",
+    code: "CE",
+    stock: 5
+}
+
+const productMissingParameters = {
+    title: "Collar Ancho",
+    description: "1 ½ pulgada de ancho Nombre y 1 numero de tel bordado",
+    price: 200,
+    thumbnail: "https://raknarrok.github.io/static/images/productos/collares/ancho.png",
+    code: "CA"
+}
 
 // Verify list is empty
 console.log(`------Empty Array Is displayed`, listElements.getAllProducts())
 
 // Adding products
-listElements.addProduct("Collar Slim", "½ pulgada de ancho Nombre y 1 numero de tel bordado", 100, "https://raknarrok.github.io/static/images/productos/collares/slim.png", "CXS", 10)
-listElements.addProduct("Collar Normal", "1 pulgada de ancho Nombre y 1 numero de tel bordado", 200, "https://raknarrok.github.io/static/images/productos/collares/normal.png", "CN", 20)
-listElements.addProduct("Collar Ancho", "1 ½ pulgada de ancho Nombre y 1 numero de tel bordado", 300, "https://raknarrok.github.io/static/images/productos/collares/ancho.png", "CA", 30)
+listElements.addProduct(productOne)
+listElements.addProduct(productTwo)
+listElements.addProduct(productThree)
+listElements.addProduct(productFour)
 
 // Verify prducts were added
 console.log(`------List of products added`)
@@ -150,8 +218,22 @@ listElements.updateProductByCode("CA", { title: "Collar Ancho Actualizado", desc
 console.log(`List of products after update item with code CA`)
 console.log(listElements.getAllProducts())
 
-// Show a message in case to missing required fields
-listElements.addProduct("Collar Ancho", "1 ½ pulgada de ancho Nombre y 1 numero de tel bordado", 300, "https://raknarrok.github.io/static/images/productos/collares/ancho.png", "")
+// Update product by ID
+listElements.updateProductById(1, { title: "Collar Slim Actualizado", description: "½ pulgada de ancho Nombre y 1 numero de tel bordado", price: 500, thumbnail: "https://raknarrok.github.io/static/images/productos/collares/slim.png", code: "CXS", stock: 15 })
 
-// Dropping error when trying to add a product with a code already in use
+// Verify product was updated
+console.log(`List of products after update item with ID 1`)
+console.log(listElements.getAllProducts())
+
+// Removing product by code
+listElements.removeProductById(4)
+
+// Verify product was removed
+console.log(`List of products after remove item with ID 4`)
+console.log(listElements.getAllProducts())
+
+// Show a message in case to missing required fields
+listElements.addProduct(productMissingParameters)
+
+// Dropping error when trying to add a product with a code already in use (Its working with direct parameters)
 listElements.addProduct("Collar Ancho", "1 ½ pulgada de ancho Nombre y 1 numero de tel bordado", 300, "https://raknarrok.github.io/static/images/productos/collares/ancho.png", "CA", 30)
