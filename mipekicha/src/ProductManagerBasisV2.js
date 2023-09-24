@@ -136,7 +136,7 @@ class ProductManagerV2 {
     }
 }
 
-listElements = new ProductManagerV2('./products.txt')
+let listElements = new ProductManagerV2('./products.txt')
 
 // Products Creation Section
 const productOne = {
