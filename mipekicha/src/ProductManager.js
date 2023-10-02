@@ -11,12 +11,15 @@ class ProductManager {
     this.products = this.checkFile()
   }
 
-  addProduct ({ title, description, price, thumbnail, code, stock }) {
+  addProduct ({ title, description, price, thumbnail, code, stock, category, statusItem }) {
     // First Validate if we have all the required fields
-    if (!title || !description || !price || !thumbnail || !code || stock === undefined) {
-      console.error('Hey!!! You are missing one or more required fields. Please provide values for title, description, price, thumbnail, code, and stock to continue.')
+    if (!title || !description || !price || !code || stock === undefined || !category || !statusItem) {
+      console.error('Hey!!! You are missing one or more required fields. Please provide values for title, description, price, code, stock, category or statusItem to continue.')
       return
     }
+
+    const maxId = this.products.reduce((max, product) => (product.id > max ? product.id : max), 0)
+    this.productIdCounter = maxId + 1
 
     // Read the file and parse the content to an array
     const fileContent = this.checkFile()
@@ -37,7 +40,9 @@ class ProductManager {
         price,
         thumbnail,
         code: code || `P${this.productIdCounter}`,
-        stock
+        stock,
+        category,
+        statusItem
       }
       this.products.push(product)
       this.saveFile()
@@ -51,7 +56,9 @@ class ProductManager {
         price,
         thumbnail,
         code: code || `P${this.productIdCounter}`,
-        stock
+        stock,
+        category,
+        statusItem
       }
       this.products.push(product)
       this.saveFile()
@@ -108,6 +115,13 @@ class ProductManager {
   }
 
   updateProductById (id, updatedProduct) {
+    const { code } = updatedProduct
+    const isCodeInUse = this.products.some((product) => product.code === code)
+    if (isCodeInUse) {
+      // throw new Error(`The code ${code} is already in use Code must be unique.`)
+      return `The code ${code} is already in use Code must be unique.`
+    }
+
     const index = this.products.findIndex((product) => product.id === id)
     if (index !== -1) {
       this.products[index] = { ...this.products[index], ...updatedProduct }
@@ -160,7 +174,9 @@ const productOne = {
   price: 100,
   thumbnail: 'https://raknarrok.github.io/static/images/productos/collares/slim.png',
   code: 'CXS',
-  stock: 10
+  stock: 10,
+  category: 'Collares',
+  statusItem: true
 }
 
 const productTwo = {
@@ -169,7 +185,9 @@ const productTwo = {
   price: 200,
   thumbnail: 'https://raknarrok.github.io/static/images/productos/collares/normal.png',
   code: 'CN',
-  stock: 10
+  stock: 10,
+  category: 'Collares',
+  statusItem: true
 }
 
 const productThree = {
@@ -178,7 +196,9 @@ const productThree = {
   price: 200,
   thumbnail: 'https://raknarrok.github.io/static/images/productos/collares/ancho.png',
   code: 'CA',
-  stock: 30
+  stock: 30,
+  category: 'Collares',
+  statusItem: true
 }
 
 const productFour = {
@@ -187,7 +207,9 @@ const productFour = {
   price: 450,
   thumbnail: 'https://raknarrok.github.io/static/images/productos/collares/ancho.png',
   code: 'CE',
-  stock: 5
+  stock: 5,
+  category: 'Collares',
+  statusItem: true
 }
 
 const productFive = {
@@ -196,7 +218,9 @@ const productFive = {
   price: 450,
   thumbnail: 'https://raknarrok.github.io/static/images/productos/collares/ancho.png',
   code: 'PHS',
-  stock: 5
+  stock: 5,
+  category: 'Plaquitas',
+  statusItem: true
 }
 
 const productSix = {
@@ -205,7 +229,9 @@ const productSix = {
   price: 9.99,
   thumbnail: 'https://example.com/dogtag1.jpg',
   code: 'DT1',
-  stock: 15
+  stock: 15,
+  category: 'Plaquitas',
+  statusItem: true
 }
 
 const productSeven = {
@@ -214,7 +240,9 @@ const productSeven = {
   price: 12.99,
   thumbnail: 'https://example.com/dogtag2.jpg',
   code: 'DT2',
-  stock: 8
+  stock: 8,
+  category: 'Plaquitas',
+  statusItem: true
 }
 
 const productEight = {
@@ -223,7 +251,9 @@ const productEight = {
   price: 14.99,
   thumbnail: 'https://example.com/dogtag3.jpg',
   code: 'DT3',
-  stock: 3
+  stock: 3,
+  category: 'Plaquitas',
+  statusItem: true
 }
 
 const productNine = {
@@ -232,7 +262,9 @@ const productNine = {
   price: 8.99,
   thumbnail: 'https://example.com/dogtag4.jpg',
   code: 'DT4',
-  stock: 20
+  stock: 20,
+  category: 'Plaquitas',
+  statusItem: true
 }
 
 const productTen = {
@@ -241,7 +273,9 @@ const productTen = {
   price: 11.99,
   thumbnail: 'https://example.com/dogtag5.jpg',
   code: 'DT5',
-  stock: 12
+  stock: 12,
+  category: 'Plaquitas',
+  statusItem: true
 }
 
 // Verify list is empty
