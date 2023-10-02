@@ -7,6 +7,8 @@ const app = express()
 const PORT = 8080
 const ProductManager = require('./ProductManager')
 const productManager = new ProductManager('./products.txt')
+const CartManager = require('./CartManager')
+const cartManager = new CartManager('./cart.txt')
 
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
@@ -87,6 +89,30 @@ app.delete('/api/products/:productId', async (req, res) => {
   }
 })
 
+// Cart
+app.get('/api/cart/:cartId', async (req, res) => {
+    const cartId = parseInt(req.params.cartId)
+  try {
+    const cart = cartManager.getCartById(cartId)
+    if (cart.length === 0) {
+      res.status(404).json({ error: 'No existe el carro' })
+    } else {
+      res.json({ cart })
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.post('/api/cart', (req, res) => {
+  try {
+    console.log(req.body)
+    const cart = cartManager.addCart(req.body)
+    res.json({ cart })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
 
 server.on('error', (error) => {
   console.log(`Error: ${error}`)

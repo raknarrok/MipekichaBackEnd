@@ -1,5 +1,5 @@
 /*
-Go to cd deliveryserver
+Go to cd src
 Run node app.js
 */
 const fs = require('fs')
@@ -42,7 +42,7 @@ class ProductManager {
         code: code || `P${this.productIdCounter}`,
         stock,
         category,
-        statusItem
+        statusItem: statusItem || true
       }
       this.products.push(product)
       this.saveFile()
@@ -58,7 +58,7 @@ class ProductManager {
         code: code || `P${this.productIdCounter}`,
         stock,
         category,
-        statusItem
+        statusItem: statusItem || true
       }
       this.products.push(product)
       this.saveFile()
