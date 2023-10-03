@@ -14,8 +14,7 @@ class ProductManager {
   addProduct ({ title, description, price, thumbnail, code, stock, category, statusItem }) {
     // First Validate if we have all the required fields
     if (!title || !description || !price || !code || stock === undefined || !category || !statusItem) {
-      console.error('Hey!!! You are missing one or more required fields. Please provide values for title, description, price, code, stock, category or statusItem to continue.')
-      return
+      throw new Error('BAD REQUEST: Hey!!! You are missing one or more required fields. Please provide values for title, description, price, code, stock, category or statusItem to continue.')
     }
 
     const maxId = this.products.reduce((max, product) => (product.id > max ? product.id : max), 0)
@@ -29,8 +28,7 @@ class ProductManager {
       // Verify if the code is already in use
       const isCodeInUse = this.products.some((product) => product.code === code)
       if (isCodeInUse) {
-        // throw new Error(`The code ${code} is already in use Code must be unique.`)
-        return `The code ${code} is already in use Code must be unique.`
+        throw new Error(`The code ${code} is already in use Code must be unique.`)
       }
 
       const product = {
@@ -93,7 +91,7 @@ class ProductManager {
   getProductByCode (code) {
     const product = this.products.find((product) => product.code === code)
     if (!product) {
-      return 'Not Found'
+      throw new Error(`The code ${code} doesnt exist, please verify and try again.`)
     }
     return product
   }
@@ -118,14 +116,15 @@ class ProductManager {
     const { code } = updatedProduct
     const isCodeInUse = this.products.some((product) => product.code === code)
     if (isCodeInUse) {
-      // throw new Error(`The code ${code} is already in use Code must be unique.`)
-      return `The code ${code} is already in use Code must be unique.`
+      throw new Error(`The code ${code} is already in use Code must be unique.`)
     }
 
     const index = this.products.findIndex((product) => product.id === id)
     if (index !== -1) {
       this.products[index] = { ...this.products[index], ...updatedProduct }
       this.saveFile()
+    } else {
+      throw new Error(`The id ${id} doesnt exist, please verify and try again.`)
     }
   }
 
@@ -134,13 +133,14 @@ class ProductManager {
   }
 
   getAllProducts () {
-    return this.products
+    return this.products || []
   }
 
   getProducts (limit) {
     if (!limit) {
       return this.products
     } else {
+      // throw new Error('NOT FOUND: No existen productos para mostrar.')
       return this.products.slice(0, limit)
     }
   }
@@ -282,6 +282,7 @@ const productTen = {
 console.log('------Empty Array Is displayed', listElements.getAllProducts())
 
 // Adding products
+/*
 listElements.addProduct(productOne)
 listElements.addProduct(productTwo)
 listElements.addProduct(productThree)
@@ -292,5 +293,6 @@ listElements.addProduct(productSeven)
 listElements.addProduct(productEight)
 listElements.addProduct(productNine)
 listElements.addProduct(productTen)
+*/
 
 module.exports = ProductManager

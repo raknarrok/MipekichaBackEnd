@@ -21,9 +21,9 @@ app.use(express.static('public'))
 // Products
 app.get('/api/products', async (req, res) => {
   try {
-    const products = await productManager.getProducts(req.query.limit)
+    const products = productManager.getProducts(req.query.limit)
     if (products.length === 0) {
-      res.status(404).json({ error: 'No hay productos cargados' })
+      res.status(404).json({ error: error.message })
     } else {
       res.json({ products })
     }
@@ -63,19 +63,19 @@ app.get('/api/products/code/:productCode', async (req, res) => {
 app.post('/api/products', (req, res) => {
   try {
     const product = productManager.addProduct(req.body)
-    res.json({ product })
+    res.status(200).json({ product })
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(400).json({ error: error.message })
   }
 })
 
 app.put('/api/products/:productId', async (req, res) => {
   const productId = parseInt(req.params.productId)
   try {
-    const product = await productManager.updateProductById(productId, req.body)
-    res.json({ product })
+    const product = productManager.updateProductById(productId, req.body)
+    res.status(200).json({ product })
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(400).json({ error: error.message })
   }
 })
 
@@ -83,9 +83,9 @@ app.delete('/api/products/:productId', async (req, res) => {
   const productId = parseInt(req.params.productId)
   try {
     const product = productManager.removeProductById(productId)
-    res.json({ product })
+    res.status(200).json({ product })
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(400).json({ error: error.message })
   }
 })
 
@@ -97,7 +97,7 @@ app.get('/api/cart/:cartId', async (req, res) => {
     if (cart.length === 0) {
       res.status(404).json({ error: 'No existe el carro' })
     } else {
-      res.json({ cart })
+      res.status(200).json({ cart })
     }
   } catch (error) {
     res.status(500).json({ error: error.message })
@@ -108,6 +108,15 @@ app.post('/api/cart', (req, res) => {
   try {
     console.log(req.body)
     const cart = cartManager.addCart(req.body)
+    res.json({ cart })
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
+app.post('/api/cart/:cartId/product/:productId', (req, res) => {
+  try {
+    const cart = cartManager.addProductToCart(req.params.cartId, req.params.productId, req.body)
     res.json({ cart })
   } catch (error) {
     res.status(500).json({ error: error.message })
