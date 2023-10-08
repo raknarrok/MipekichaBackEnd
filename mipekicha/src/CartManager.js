@@ -2,7 +2,6 @@
 Go to cd src
 Run node app.js
 */
-
 const fs = require('fs')
 
 class CartManager {
@@ -12,45 +11,30 @@ class CartManager {
     this.carts = this.checkFile()
   }
 
-  addCart (bodyRequest) {
-    const { products } = bodyRequest
-    console.log(bodyRequest)
-
-    if (!products || !Array.isArray(products) || products.length === 0) {
-      console.error('Hey!!! The request body must contain a valid "products" array with product objects.')
-      return
-    }
-
+  addCart () {
     const maxId = this.carts.reduce((max, cart) => (cart.id > max ? cart.id : max), 0)
     this.cartIdCounter = maxId + 1
     const fileContent = this.checkFile()
     console.log(fileContent)
 
-    if (fileContent) {
-      const existingCart = this.carts.find((cart) => cart.id === this.cartIdCounter)
-      if (existingCart) {
-        // Add The product to existing cart
-        existingCart.products.push(...products)
-      } else {
-        // Create New Cart
-        const cart = {
-          id: this.cartIdCounter,
-          products
-        }
-        this.carts.push(cart)
-        this.cartIdCounter++
-      }
-      this.saveFile()
-    } else {
-      const cart = {
-        id: this.cartIdCounter,
-        products
-      }
-      console.log(cart)
-      this.carts.push(cart)
-      this.cartIdCounter++
-      this.saveFile()
+    // Create New Cart
+    const cart = {
+      id: this.cartIdCounter,
+      products: []
     }
+    this.carts.push(cart)
+    this.cartIdCounter++
+    this.saveFile()
+  }
+
+  deleteCart (cartId) {
+    const cart = this.carts.find((cart) => cart.id === parseInt(cartId))
+    if (!cart) {
+      throw new Error(`The cart with id ${cartId} was not found.`)
+    }
+    const index = this.carts.indexOf(cart)
+    this.carts.splice(index, 1)
+    this.saveFile()
   }
 
   addProductToCart (cartId, productId, bodyRequest) {
@@ -60,10 +44,8 @@ class CartManager {
     }
 
     // First Validate if we have all the required fields
-    if (!bodyRequest.products || !Array.isArray(bodyRequest.products) || bodyRequest.products.length === 0) {
+    if (!bodyRequest.products || bodyRequest.products.length === 0) {
       throw new Error('BAD REQUEST: Bad Request: Hey!!! The request body must contain a valid "products" array with product objects.')
-      // console.error('Hey!!! The request body must contain a valid "products" array with product objects.')
-      return
     }
 
     // Read the file and parse the content to an array
@@ -75,18 +57,20 @@ class CartManager {
     }
 
     // Verify if the product is already in the cart
-    const isProductInCart = cart.products.some((product) => product.prodId === parseInt(productId))
+    const isProductInCart = cart.products.some((product) => product.id === parseInt(productId))
     if (isProductInCart) {
       // If is in the cart, update the quantity
-      const product = cart.products.find((product) => product.prodId === parseInt(productId))
+      const product = cart.products.find((product) => product.id === parseInt(productId))
       const index = cart.products.indexOf(product)
       cart.products[index].quantity += bodyRequest.products[0].quantity
       this.saveFile()
       return cart
     } else {
       // If is not in the cart, add the product
+      const id = { id: parseInt(productId) }
       const product = bodyRequest.products[0]
-      cart.products.push(product)
+      const mergeElements = { ...id, ...product }
+      cart.products.push(mergeElements)
       this.saveFile()
       return cart
     }

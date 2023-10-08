@@ -106,20 +106,33 @@ app.get('/api/cart/:cartId', async (req, res) => {
 
 app.post('/api/cart', (req, res) => {
   try {
-    console.log(req.body)
-    const cart = cartManager.addCart(req.body)
+    const cart = cartManager.addCart()
     res.json({ cart })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-app.post('/api/cart/:cartId/product/:productId', (req, res) => {
+app.post('/api/cart/:cartId/product/:productId', async (req, res) => {
   try {
+    const productId = parseInt(req.params.productId)
+    const products = await productManager.getProductById(productId)
+    if (products === 0) {
+      return res.status(404).json({ error: 'Item Not Found' })
+    }
     const cart = cartManager.addProductToCart(req.params.cartId, req.params.productId, req.body)
     res.json({ cart })
   } catch (error) {
-    res.status(500).json({ error: error.message })
+    res.status(404).json({ error: error.message })
+  }
+})
+
+app.delete('/api/cart/:cartId', (req, res) => {
+  try {
+    const cart = cartManager.deleteCart(req.params.cartId)
+    res.json({ cart })
+  } catch (error) {
+    res.status(404).json({ error: error.message })
   }
 })
 
