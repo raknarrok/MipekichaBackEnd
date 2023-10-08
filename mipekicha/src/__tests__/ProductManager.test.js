@@ -12,6 +12,26 @@ beforeEach(() => {
     }
   })
   */
+describe('ProductManager', () => {
+  it('should add a product with multiple thumbnails', () => {
+    const productManager = new ProductManager('./products.txt')
+    const product = {
+      title: 'Test Product',
+      description: 'This is a test product',
+      price: 10,
+      thumbnails: ['https://www.test.com/image1.jpg', 'https://www.test.com/image2.jpg'],
+      code: 'TEST4',
+      stock: 5,
+      category: 'Test',
+      statusItem: true
+    }
+    productManager.addProduct(product)
+    const products = productManager.getAllProducts()
+    expect(products).toHaveLength(1)
+    expect(products[0]).toEqual(expect.objectContaining(product))
+    productManager.removeProductByCode('TEST4')
+  })
+})
 
 describe('ProductManager', () => {
   it('should add a product', () => {
