@@ -2,12 +2,14 @@
 Go to cd mipekicha/src
 Run node app.js
 */
-const express = require('express')
+import ProductManager from './controllers/ProductManager.js'
+import CartManager from './controllers/CartManager.js'
+import express from 'express'
+import Config from './static/constants/Config.js'
+
 const app = express()
 const PORT = 8080
-const ProductManager = require('./ProductManager')
 const productManager = new ProductManager('./products.txt')
-const CartManager = require('./CartManager')
 const cartManager = new CartManager('./cart.txt')
 
 const server = app.listen(PORT, () => {
@@ -23,7 +25,7 @@ app.get('/api/products', async (req, res) => {
   try {
     const products = productManager.getProducts(req.query.limit)
     if (products.length === 0) {
-      res.status(404).json({ error: error.message })
+      res.status(404).json({ error: Config.NOT_FOUND })
     } else {
       res.json({ products })
     }
@@ -37,7 +39,7 @@ app.get('/api/products/:productId', async (req, res) => {
   try {
     const products = await productManager.getProductById(productId)
     if (products === 0) {
-      res.status(404).json({ error: 'Item Not Found' })
+      res.status(404).json({ error: Config.NOT_FOUND })
     } else {
       res.json({ products })
     }
@@ -51,7 +53,7 @@ app.get('/api/products/code/:productCode', async (req, res) => {
   try {
     const products = await productManager.getProductByCode(productCode)
     if (products === 0) {
-      res.status(404).json({ error: 'Item Not Found' })
+      res.status(404).json({ error: Config.NOT_FOUND })
     } else {
       res.json({ products })
     }
@@ -91,11 +93,11 @@ app.delete('/api/products/:productId', async (req, res) => {
 
 // Cart
 app.get('/api/cart/:cartId', async (req, res) => {
-    const cartId = parseInt(req.params.cartId)
+  const cartId = parseInt(req.params.cartId)
   try {
     const cart = cartManager.getCartById(cartId)
     if (cart.length === 0) {
-      res.status(404).json({ error: 'No existe el carro' })
+      res.status(404).json({ error: Config.NOT_FOUND })
     } else {
       res.status(200).json({ cart })
     }
@@ -118,7 +120,7 @@ app.post('/api/cart/:cartId/product/:productId', async (req, res) => {
     const productId = parseInt(req.params.productId)
     const products = await productManager.getProductById(productId)
     if (products === 0) {
-      return res.status(404).json({ error: 'Item Not Found' })
+      return res.status(404).json({ error: Config.NOT_FOUND })
     }
     const cart = cartManager.addProductToCart(req.params.cartId, req.params.productId, req.body)
     res.json({ cart })

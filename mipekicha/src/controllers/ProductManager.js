@@ -2,7 +2,7 @@
 Go to cd src
 Run node app.js
 */
-const fs = require('fs')
+import fs from 'fs'
 
 class ProductManager {
   constructor (filePath) {
@@ -295,4 +295,4 @@ listElements.addProduct(productNine)
 listElements.addProduct(productTen)
 */
 
-module.exports = ProductManager
+export default ProductManager
