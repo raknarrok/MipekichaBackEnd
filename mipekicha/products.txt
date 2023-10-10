@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "title": "Collar Slim",
+    "description": "½ pulgada de ancho Nombre y 1 numero de tel bordado",
+    "price": 100,
+    "thumbnails": "https://raknarrok.github.io/static/images/productos/collares/slim.png",
+    "code": "CXS",
+    "stock": 10,
+    "category": "Collares",
+    "statusItem": true
+  },
+  {
+    "id": 2,
+    "title": "Collar Normal",
+    "description": "1 pulgada de ancho Nombre y 1 numero de tel bordado",
+    "price": 200,
+    "thumbnails": "https://raknarrok.github.io/static/images/productos/collares/normal.png",
+    "code": "CN",
+    "stock": 10,
+    "category": "Collares",
+    "statusItem": true
+  },
+  {
+    "id": 3,
+    "title": "Collar Ancho",
+    "description": "1 ½ pulgada de ancho Nombre y 1 numero de tel bordado",
+    "price": 200,
+    "thumbnails": "https://raknarrok.github.io/static/images/productos/collares/ancho.png",
+    "code": "CA",
+    "stock": 30,
+    "category": "Collares",
+    "statusItem": true
+  },
+  {
+    "id": 4,
+    "title": "Collar Especial",
+    "description": "Diferentes anchos, colores y diseños. Nombre y 1 numero de tel bordado",
+    "price": 450,
+    "thumbnails": "https://raknarrok.github.io/static/images/productos/collares/ancho.png",
+    "code": "CE",
+    "stock": 5,
+    "category": "Collares",
+    "statusItem": true
+  },
+  {
+    "id": 5,
+    "title": "Plaquita Hueso S",
+    "description": "Plaquita de hueso de 1.5 cm de ancho por 1 cm de alto. Nombre y 1 numero de tel bordado",
+    "price": 450,
+    "thumbnails": "https://raknarrok.github.io/static/images/productos/collares/ancho.png",
+    "code": "PHS",
+    "stock": 5,
+    "category": "Plaquitas",
+    "statusItem": true
+  },
+  {
+    "id": 6,
+    "title": "Dog Tag Type 1",
+    "description": "This is a dog tag type 1",
+    "price": 9.99,
+    "thumbnails": "https://example.com/dogtag1.jpg",
+    "code": "DT1",
+    "stock": 15,
+    "category": "Plaquitas",
+    "statusItem": true
+  },
+  {
+    "id": 7,
+    "title": "Dog Tag Type 2",
+    "description": "This is a dog tag type 2",
+    "price": 12.99,
+    "thumbnails": "https://example.com/dogtag2.jpg",
+    "code": "DT2",
+    "stock": 8,
+    "category": "Plaquitas",
+    "statusItem": true
+  },
+  {
+    "id": 8,
+    "title": "Dog Tag Type 3",
+    "description": "This is a dog tag type 3",
+    "price": 14.99,
+    "thumbnails": "https://example.com/dogtag3.jpg",
+    "code": "DT3",
+    "stock": 3,
+    "category": "Plaquitas",
+    "statusItem": true
+  },
+  {
+    "id": 9,
+    "title": "Dog Tag Type 4",
+    "description": "This is a dog tag type 4",
+    "price": 8.99,
+    "thumbnails": "https://example.com/dogtag4.jpg",
+    "code": "DT4",
+    "stock": 20,
+    "category": "Plaquitas",
+    "statusItem": true
+  },
+  {
+    "id": 10,
+    "title": "Dog Tag Type 5",
+    "description": "This is a dog tag type 5",
+    "price": 11.99,
+    "thumbnails": "https://example.com/dogtag5.jpg",
+    "code": "DT5",
+    "stock": 12,
+    "category": "Plaquitas",
+    "statusItem": true
+  }
+]
