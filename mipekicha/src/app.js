@@ -35,6 +35,8 @@ app.get('/api/product/:productId', async (req,res)=>{
     })
 })
 
+// app.use('/', )
+
 const server = app.listen(PORT, ()=>{
     console.log('Servidor activo en puerto 8080')
 })
