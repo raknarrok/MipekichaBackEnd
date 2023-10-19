@@ -2,7 +2,9 @@ import express from 'express'
 import handlerbars from 'express-handlebars'
 import __dirname from './utils.js'
 import viewsRouter from './routes/views.router.js'
+import productRouter from './routes/product.routes.js'
 import ProductManager from './controllers/ProductManager.js'
+import { Server } from 'socket.io'
 
 const app = express()
 const PORT = 8080
@@ -26,6 +28,12 @@ app.get('/', async (req,res)=>{
     })
 })
 
+app.post('/products', async (req,res)=>{
+  const newProduct = req.body
+  productManager.addProduct(newProduct)
+  res.redirect('/')
+})
+
 app.get('/api/product/:productId', async (req,res)=>{
     // const prod = await productManager.getProductById()
     const productId = parseInt(req.params.productId)
@@ -37,8 +45,11 @@ app.get('/api/product/:productId', async (req,res)=>{
 
 // app.use('/', )
 
-const server = app.listen(PORT, ()=>{
-    console.log('Servidor activo en puerto 8080')
+const httpServer = app.listen(PORT, ()=>{
+    console.log('Servidor activo en puerto ' + PORT)
 })
+const io = new Server(httpServer)
 
-server
+io.on('connection', (socket) => {
+  console.log('new client')
+})

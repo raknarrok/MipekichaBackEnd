@@ -1,8 +1,10 @@
-import Router from 'express'
+// import Router from 'express'
+import express from 'express'
 import ProductManager from '../controllers/ProductManager.js'
 
-const ProductManagerRouter = Router()
-const productManager = new ProductManager()
+// const ProductManagerRouter = Router()
+const ProductManagerRouter = express.Router()
+const productManager = new ProductManager('./products.txt')
 
 // GET
 ProductManagerRouter.get('/api/products', async (req, res) => {
