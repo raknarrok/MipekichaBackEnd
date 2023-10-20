@@ -1,9 +1,7 @@
 <div>
-
     <h1>Real Time Products</h1>
     <div>
-        Product List:
-        <table border="1">
+        <table border="1" id="live-products-table">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -18,28 +16,27 @@
                 </tr>
             <tbody>
                 {{#each products}}
-                <tr>
-                    <td>{{this.id}}</td>
-                    <td>{{this.title}}</td>
-                    <td>{{this.description}}</td>
-                    <td>{{this.price}}</td>
-                    <td>{{this.thumbnails}}</td>
-                    <td>{{this.code}}</td>
-                    <td>{{this.stock}}</td>
-                    <td>{{this.category}}</td>
-                    <td>{{this.statusItem}}</td>
-                </tr>
+                    <tr>
+                        <td>{{this.id}}</td>
+                        <td>{{this.title}}</td>
+                        <td>{{this.description}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.thumbnails}}</td>
+                        <td>{{this.code}}</td>
+                        <td>{{this.stock}}</td>
+                        <td>{{this.category}}</td>
+                        <td>{{this.statusItem}}</td>
+                    </tr>
                 {{/each}}
             </tbody>
             </thead>
         </table>
     </div>
-
     <!-- Form to add a new product This is the way to add another template -->
     {{> productForm}}
 </div>
 
 <!-- Socket.io -->
 <script src="/socket.io/socket.io.js"></script>
-<script src="/src/public/js/index.js"></script>
+<script src="/js/index.js"></script>
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script> -->
