@@ -1,13 +1,15 @@
-// import Router from 'express'
-import express from 'express'
+import { Router } from 'express'
 import ProductManager from '../controllers/ProductManager.js'
 
-// const ProductManagerRouter = Router()
-const ProductManagerRouter = express.Router()
+const route = Router()
 const productManager = new ProductManager('./products.txt')
 
+// ESTAS RUTAS VAN A ESTAR PRECEDIDAS POR /api/products
+// ESTO LO DEFINIMOS EN APP EN LA LINEA 26
+// app.use('/api/products', productsRoutes)
+
 // GET
-ProductManagerRouter.get('/api/products', async (req, res) => {
+route.get('/', async (req, res) => {
   try {
     const products = await productManager.getProducts(req.query.limit)
     if (products.length === 0) {
@@ -20,7 +22,7 @@ ProductManagerRouter.get('/api/products', async (req, res) => {
   }
 })
 
-ProductManagerRouter.get('/api/products/:productId', async (req, res) => {
+route.get('/:productId', async (req, res) => {
   const productId = parseInt(req.params.productId)
   try {
     const products = await productManager.getProductById(productId)
@@ -34,7 +36,7 @@ ProductManagerRouter.get('/api/products/:productId', async (req, res) => {
   }
 })
 
-ProductManagerRouter.get('/api/products/code/:productCode', async (req, res) => {
+route.get('/code/:productCode', async (req, res) => {
   const productCode = req.params.productCode
   try {
     const products = await productManager.getProductByCode(productCode)
@@ -49,7 +51,7 @@ ProductManagerRouter.get('/api/products/code/:productCode', async (req, res) => 
 })
 
 // POST
-ProductManagerRouter.post('/api/products', (req, res) => {
+route.post('', (req, res) => {
   try {
     const product = productManager.addProduct(req.body)
     res.status(200).json({ product })
@@ -59,7 +61,7 @@ ProductManagerRouter.post('/api/products', (req, res) => {
 })
 
 // PUT
-ProductManagerRouter.put('/api/products/:productId', async (req, res) => {
+route.put('/:productId', async (req, res) => {
   const productId = parseInt(req.params.productId)
   try {
     const product = productManager.updateProductById(productId, req.body)
@@ -70,7 +72,7 @@ ProductManagerRouter.put('/api/products/:productId', async (req, res) => {
 })
 
 // DELETE
-ProductManagerRouter.delete('/api/products/:productId', async (req, res) => {
+route.delete('/:productId', async (req, res) => {
   const productId = parseInt(req.params.productId)
   try {
     const product = productManager.removeProductById(productId)
@@ -80,5 +82,4 @@ ProductManagerRouter.delete('/api/products/:productId', async (req, res) => {
   }
 })
 
-
-export default ProductManagerRouter
+export default route

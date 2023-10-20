@@ -5,77 +5,96 @@ Run node app.js
 import fs from 'fs'
 
 class ProductManager {
-  constructor (filePath) {
+  constructor(filePath) {
     this.productIdCounter = 1
     this.filePath = filePath
     this.products = this.checkFile()
   }
 
-  addProduct ({ title, description, price, thumbnails, code, stock, category, statusItem }) {
+  addProduct({
+    title,
+    description,
+    price,
+    thumbnails,
+    code,
+    stock,
+    category,
+    statusItem,
+  }) {
     // First Validate if we have all the required fields
-    if (!title || !description || !price || !code || stock === undefined || !category || !statusItem) {
-      throw new Error('BAD REQUEST: Hey!!! You are missing one or more required fields. Please provide values for title, description, price, code, stock, category or statusItem to continue.')
+    if (
+      !title ||
+      !description ||
+      !price ||
+      !code ||
+      stock === undefined ||
+      !category ||
+      !statusItem
+    ) {
+      throw new Error(
+        'BAD REQUEST: Hey!!! You are missing one or more required fields. Please provide values for title, description, price, code, stock, category or statusItem to continue.'
+      )
     }
 
-    const maxId = this.products.reduce((max, product) => (product.id > max ? product.id : max), 0)
+    const maxId = this.products.reduce(
+      (max, product) => (product.id > max ? product.id : max),
+      0
+    )
     this.productIdCounter = maxId + 1
 
     // Read the file and parse the content to an array
     const fileContent = this.checkFile()
 
+    const product = {
+      id: this.productIdCounter,
+      title,
+      description,
+      price,
+      thumbnails,
+      code: code || `P${this.productIdCounter}`,
+      stock,
+      category,
+      statusItem: statusItem || true,
+    }
+
     // Verify if the file is empty.
     if (fileContent) {
       // Verify if the code is already in use
-      const isCodeInUse = this.products.some((product) => product.code === code)
+      const isCodeInUse = this.products.some(product => product.code === code)
       if (isCodeInUse) {
-        throw new Error(`The code ${code} is already in use Code must be unique.`)
+        throw new Error(
+          `The code ${code} is already in use Code must be unique.`
+        )
       }
 
-      const product = {
-        id: this.productIdCounter,
-        title,
-        description,
-        price,
-        thumbnails,
-        code: code || `P${this.productIdCounter}`,
-        stock,
-        category,
-        statusItem: statusItem || true
-      }
       this.products.push(product)
       this.saveFile()
       this.productIdCounter++
     } else {
       // If the file is empty, create an array with the first product
-      const product = {
-        id: this.productIdCounter,
-        title,
-        description,
-        price,
-        thumbnails,
-        code: code || `P${this.productIdCounter}`,
-        stock,
-        category,
-        statusItem: statusItem || true
-      }
+
       this.products.push(product)
       this.saveFile()
       this.productIdCounter++
     }
+
+    return product
   }
 
-  removeProductByCode (code) {
-    const index = this.products.findIndex((product) => product.code === code)
+  removeProductByCode(code) {
+    const index = this.products.findIndex(product => product.code === code)
     if (index !== -1) {
       this.products.splice(index, 1)
       this.saveFile()
     } else {
-      throw new Error(`The code ${code} doesnt exist, please verify and try again.`)
+      throw new Error(
+        `The code ${code} doesnt exist, please verify and try again.`
+      )
     }
   }
 
-  removeProductById (id) {
-    const index = this.products.findIndex((product) => product.id === id)
+  removeProductById(id) {
+    const index = this.products.findIndex(product => product.id === id)
     if (index !== -1) {
       this.products.splice(index, 1)
       this.saveFile()
@@ -84,42 +103,44 @@ class ProductManager {
     }
   }
 
-  removeProduct (product) {
+  removeProduct(product) {
     this.removeProductByCode(product.code)
   }
 
-  getProductByCode (code) {
-    const product = this.products.find((product) => product.code === code)
+  getProductByCode(code) {
+    const product = this.products.find(product => product.code === code)
     if (!product) {
-      throw new Error(`The code ${code} doesnt exist, please verify and try again.`)
+      throw new Error(
+        `The code ${code} doesnt exist, please verify and try again.`
+      )
     }
     return product
   }
 
-  getProductById (id) {
-    const product = this.products.find((product) => product.id === id)
+  getProductById(id) {
+    const product = this.products.find(product => product.id === id)
     if (!product) {
       return 0
     }
     return product
   }
 
-  updateProductByCode (code, updatedProduct) {
-    const index = this.products.findIndex((product) => product.code === code)
+  updateProductByCode(code, updatedProduct) {
+    const index = this.products.findIndex(product => product.code === code)
     if (index !== -1) {
       this.products[index] = { ...this.products[index], ...updatedProduct }
       this.saveFile()
     }
   }
 
-  updateProductById (id, updatedProduct) {
+  updateProductById(id, updatedProduct) {
     const { code } = updatedProduct
-    const isCodeInUse = this.products.some((product) => product.code === code)
+    const isCodeInUse = this.products.some(product => product.code === code)
     if (isCodeInUse) {
       throw new Error(`The code ${code} is already in use Code must be unique.`)
     }
 
-    const index = this.products.findIndex((product) => product.id === id)
+    const index = this.products.findIndex(product => product.id === id)
     if (index !== -1) {
       this.products[index] = { ...this.products[index], ...updatedProduct }
       this.saveFile()
@@ -128,15 +149,15 @@ class ProductManager {
     }
   }
 
-  updateProductList (newProductList) {
+  updateProductList(newProductList) {
     this.products = newProductList
   }
 
-  getAllProducts () {
-    return this.products || []
+  getAllProducts() {
+    return this.checkFile()
   }
 
-  getProducts (limit) {
+  getProducts(limit) {
     if (!limit) {
       return this.products
     } else {
@@ -144,7 +165,7 @@ class ProductManager {
     }
   }
 
-  checkFile () {
+  checkFile() {
     try {
       // Read the file and parse the content to an array
       const fileContent = fs.readFileSync(this.filePath, 'utf8')
@@ -159,7 +180,7 @@ class ProductManager {
     }
   }
 
-  saveFile () {
+  saveFile() {
     fs.writeFileSync(this.filePath, JSON.stringify(this.products, null, 2))
   }
 }
@@ -171,55 +192,62 @@ const productOne = {
   title: 'Collar Slim',
   description: '½ pulgada de ancho Nombre y 1 numero de tel bordado',
   price: 100,
-  thumbnails: 'https://raknarrok.github.io/static/images/productos/collares/slim.png',
+  thumbnails:
+    'https://raknarrok.github.io/static/images/productos/collares/slim.png',
   code: 'CXS',
   stock: 10,
   category: 'Collares',
-  statusItem: true
+  statusItem: true,
 }
 
 const productTwo = {
   title: 'Collar Normal',
   description: '1 pulgada de ancho Nombre y 1 numero de tel bordado',
   price: 200,
-  thumbnails: 'https://raknarrok.github.io/static/images/productos/collares/normal.png',
+  thumbnails:
+    'https://raknarrok.github.io/static/images/productos/collares/normal.png',
   code: 'CN',
   stock: 10,
   category: 'Collares',
-  statusItem: true
+  statusItem: true,
 }
 
 const productThree = {
   title: 'Collar Ancho',
   description: '1 ½ pulgada de ancho Nombre y 1 numero de tel bordado',
   price: 200,
-  thumbnails: 'https://raknarrok.github.io/static/images/productos/collares/ancho.png',
+  thumbnails:
+    'https://raknarrok.github.io/static/images/productos/collares/ancho.png',
   code: 'CA',
   stock: 30,
   category: 'Collares',
-  statusItem: true
+  statusItem: true,
 }
 
 const productFour = {
   title: 'Collar Especial',
-  description: 'Diferentes anchos, colores y diseños. Nombre y 1 numero de tel bordado',
+  description:
+    'Diferentes anchos, colores y diseños. Nombre y 1 numero de tel bordado',
   price: 450,
-  thumbnails: 'https://raknarrok.github.io/static/images/productos/collares/ancho.png',
+  thumbnails:
+    'https://raknarrok.github.io/static/images/productos/collares/ancho.png',
   code: 'CE',
   stock: 5,
   category: 'Collares',
-  statusItem: true
+  statusItem: true,
 }
 
 const productFive = {
   title: 'Plaquita Hueso S',
-  description: 'Plaquita de hueso de 1.5 cm de ancho por 1 cm de alto. Nombre y 1 numero de tel bordado',
+  description:
+    'Plaquita de hueso de 1.5 cm de ancho por 1 cm de alto. Nombre y 1 numero de tel bordado',
   price: 450,
-  thumbnails: 'https://raknarrok.github.io/static/images/productos/collares/ancho.png',
+  thumbnails:
+    'https://raknarrok.github.io/static/images/productos/collares/ancho.png',
   code: 'PHS',
   stock: 5,
   category: 'Plaquitas',
-  statusItem: true
+  statusItem: true,
 }
 
 const productSix = {
@@ -230,7 +258,7 @@ const productSix = {
   code: 'DT1',
   stock: 15,
   category: 'Plaquitas',
-  statusItem: true
+  statusItem: true,
 }
 
 const productSeven = {
@@ -241,7 +269,7 @@ const productSeven = {
   code: 'DT2',
   stock: 8,
   category: 'Plaquitas',
-  statusItem: true
+  statusItem: true,
 }
 
 const productEight = {
@@ -252,7 +280,7 @@ const productEight = {
   code: 'DT3',
   stock: 3,
   category: 'Plaquitas',
-  statusItem: true
+  statusItem: true,
 }
 
 const productNine = {
@@ -263,7 +291,7 @@ const productNine = {
   code: 'DT4',
   stock: 20,
   category: 'Plaquitas',
-  statusItem: true
+  statusItem: true,
 }
 
 const productTen = {
@@ -274,7 +302,7 @@ const productTen = {
   code: 'DT5',
   stock: 12,
   category: 'Plaquitas',
-  statusItem: true
+  statusItem: true,
 }
 
 // Verify list is empty

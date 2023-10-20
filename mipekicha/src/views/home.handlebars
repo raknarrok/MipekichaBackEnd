@@ -1,7 +1,7 @@
 <div>
 
     <h1>HOME</h1>
-    <h1> Hola {{ user.name }} que gusto verte</h1>
+    <h1> Hola estos son los productos enviados sin sockets</h1>
     <div>
         Product List:
         <table border="1">
@@ -19,17 +19,17 @@
                 </tr>
             <tbody>
                 {{#each products}}
-                <tr>
-                    <td>{{this.id}}</td>
-                    <td>{{this.title}}</td>
-                    <td>{{this.description}}</td>
-                    <td>{{this.price}}</td>
-                    <td>{{this.thumbnails}}</td>
-                    <td>{{this.code}}</td>
-                    <td>{{this.stock}}</td>
-                    <td>{{this.category}}</td>
-                    <td>{{this.statusItem}}</td>
-                </tr>
+                    <tr>
+                        <td>{{this.id}}</td>
+                        <td>{{this.title}}</td>
+                        <td>{{this.description}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.thumbnails}}</td>
+                        <td>{{this.code}}</td>
+                        <td>{{this.stock}}</td>
+                        <td>{{this.category}}</td>
+                        <td>{{this.statusItem}}</td>
+                    </tr>
                 {{/each}}
             </tbody>
             </thead>
@@ -37,11 +37,11 @@
     </div>
 
     <!-- Form to add a new product This is the way to add another template -->
-    {{> productForm}}
+    {{!-- {{> productForm}} --}}
 
     {{#if isAdmin}}
         <p> Si tienes permisos </p>
-        {{else}}
+    {{else}}
         <p>No tienes permisos</p>
     {{/if}}
 </div>
