@@ -5,11 +5,13 @@ import viewsRouter from './routes/views.router.js'
 import productRouter from './routes/product.routes.js'
 import ProductManager from './controllers/ProductManager.js'
 import { Server } from 'socket.io'
+import logger from 'morgan'
 
 const app = express()
 const PORT = 8080
 const productManager = new ProductManager('./products.txt')
 
+app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended:true }))
 
@@ -28,6 +30,10 @@ app.get('/', async (req,res)=>{
     })
 })
 
+app.get('/chat', (req,res)=>{
+  res.render('chat')
+})
+
 app.post('/products', async (req,res)=>{
   const newProduct = req.body
   productManager.addProduct(newProduct)
@@ -43,13 +49,16 @@ app.get('/api/product/:productId', async (req,res)=>{
     })
 })
 
-// app.use('/', )
-
 const httpServer = app.listen(PORT, ()=>{
-    console.log('Servidor activo en puerto ' + PORT)
+    console.log(`Servidor activo en puerto ${PORT }`)
 })
+
+// Sent Http Server to Socket.io
 const io = new Server(httpServer)
 
 io.on('connection', (socket) => {
-  console.log('new client')
+  console.log('new client - Server')
+  socket.on('disconnect', () => {
+    console.log('client disconnected - Server')
+  })
 })
