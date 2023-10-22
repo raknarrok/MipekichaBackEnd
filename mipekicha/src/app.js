@@ -34,6 +34,14 @@ app.get('/chat', (req,res)=>{
   res.render('chat')
 })
 
+app.get('/realTimeProducts', async (req,res)=>{
+  const allProducts = await productManager.getAllProducts()
+  res.render('realTimeProducts',
+  {
+    products: allProducts
+  })
+})
+
 app.post('/products', async (req,res)=>{
   const newProduct = req.body
   productManager.addProduct(newProduct)
@@ -58,12 +66,22 @@ const io = new Server(httpServer)
 
 io.on('connection', (socket) => {
   console.log('new client - Server')
+  const messagesText = []
 
-  socket.emit('newMessage', messagesText)
+  if (messagesText.length > 0) {
+    socket.emit('newMessage', messagesText)
+  }
+  // socket.emit('newMessage', messagesText)
 
   socket.on('newMessage', (txtMessage) => {
     messagesText.push(txtMessage)
     io.sockets.emit('newMessage', messagesText)
+  })
+
+  socket.on('newProduct', (product) => {
+    io.sockets.emit('newProduct', product)
+    productManager.addProduct(product)
+    console.log('newProduct its -> ', product)
   })
 
   socket.on('enviarMensaje', (data) => {

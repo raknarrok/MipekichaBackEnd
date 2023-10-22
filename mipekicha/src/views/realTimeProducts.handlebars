@@ -37,6 +37,51 @@
 
     <!-- Form to add a new product This is the way to add another template -->
     {{> productForm}}
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Conectar al servidor de Socket.IO
+        const socket = io()
+
+        // Manage the event of successful connection
+        socket.on('connect', () => {
+            console.log('Connected to the server - Client')
+        })
+
+        // Manage the event of disconnection
+        socket.on('disconnect', () => {
+            console.log('Disconnected from the server - Client')
+        })
+
+        // Start listening for new messages
+        const txtTitle = document.getElementById('txtTitle')
+        const txtDescription = document.getElementById('txtDescription')
+        const txtPrice = document.getElementById('txtPrice')
+        const txtThumbnails = document.getElementById('txtThumbnails')
+        const txtCode = document.getElementById('txtCode')
+        const txtStock = document.getElementById('txtStock')
+        const txtCategory = document.getElementById('txtCategory')
+        const txtStatusItem = document.getElementById('txtStatusItem')
+        const btnAddProduct = document.getElementById('btnAddProduct')
+
+
+        btnAddProduct.addEventListener('click', () => {
+            // Create Element With all the data
+            const newProduct = {
+                title: txtTitle.value,
+                description: txtDescription.value,
+                price: txtPrice.value,
+                thumbnails: txtThumbnails.value,
+                code: txtCode.value,
+                stock: txtStock.value,
+                category: txtCategory.value,
+                statusItem: txtStatusItem.value
+            }
+
+            // Send the new product to the server
+            socket.emit('newProduct', newProduct)
+            location.reload()
+        })
+    </script>
 </div>
 
 <!-- Socket.io -->

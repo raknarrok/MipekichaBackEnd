@@ -48,6 +48,7 @@
 
         socket.on(messages, (initialMessages) => {
             initialMessages.forEach(({ socketId, message }) => {
+                if (socketId == undefined || message == undefined) return
                 addMessage(socketId, message)
             })
         })
