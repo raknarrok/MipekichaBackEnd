@@ -58,6 +58,18 @@ const io = new Server(httpServer)
 
 io.on('connection', (socket) => {
   console.log('new client - Server')
+
+  socket.emit('newMessage', messagesText)
+
+  socket.on('newMessage', (txtMessage) => {
+    messagesText.push(txtMessage)
+    io.sockets.emit('newMessage', messagesText)
+  })
+
+  socket.on('enviarMensaje', (data) => {
+    console.log('Enviar Mensaje', data)
+  })
+
   socket.on('disconnect', () => {
     console.log('client disconnected - Server')
   })

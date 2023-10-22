@@ -2,10 +2,16 @@
     <h1>Chat</h1>
     <div id="chat">
         <div id="messages"></div>
+        <ul id="mensaje-list">
+
+        </ul>
+        <input id="mensaje-input" type="text" placeholder="Message">
+        <input id="mensaje-send" value="Enviar" type="button">
+        <!--
         <form id="message-form">
             <input name="message" type="text" placeholder="Message" autofocus />
             <button>Send</button>
-        </form>
+        </form> -->
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -20,5 +26,37 @@
         socket.on('disconnect', () => {
             console.log('Disconnected from the server - Client')
         })
+
+        // Escuchar el evento 'newMessage'
+        // socket.emit('enviarMensaje', '123')
+
+        const msgList = document.getElementById('mensaje-list')
+        const msgInput = document.getElementById('mensaje-input')
+        const msgButton = document.getElementById('mensaje-send')
+
+        const addMessage = (socketId, message) => {
+            const listElement = document.createElement('li')
+            listElement.textContent = `${socketId}: ${message}`
+            msgList.appendChild(listElement)
+        }
+
+        socket.on('newMessage', ({ socketId, message }) => {
+            console.log('socketId ', socketId)
+            console.log('newMessage ', message)
+            addMessage(socketId, message)
+        })
+
+        socket.on(messages, (initialMessages) => {
+            initialMessages.forEach(({ socketId, message }) => {
+                addMessage(socketId, message)
+            })
+        })
+
+        msgButton.addEventListener('click', () => {
+            const message = msgInput.value
+            socket.emit('newMessage', message)
+            addMessage(socket.id, message)
+        })
+
     </script>
 </div>
