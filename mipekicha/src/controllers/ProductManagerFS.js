@@ -3,16 +3,15 @@ Go to cd src
 Run node app.js
 */
 import fs from 'fs'
-import productModel from '../models/product.model.js'
 
-class ProductManager {
+class ProductManagerFS {
   constructor(filePath) {
-    // this.productIdCounter = 1
+    this.productIdCounter = 1
     this.filePath = filePath
     this.products = this.checkFile()
   }
 
-  async addProduct({
+  addProduct({
     title,
     description,
     price,
@@ -37,24 +36,22 @@ class ProductManager {
       )
     }
 
-    /*
-    const maxId = await this.products.reduce(
+    const maxId = this.products.reduce(
       (max, product) => (product.id > max ? product.id : max),
       0
     )
-    */
-    // this.productIdCounter = maxId + 1
+    this.productIdCounter = maxId + 1
 
     // Read the file and parse the content to an array
     const fileContent = this.checkFile()
 
     const product = {
-      // id: this.productIdCounter,
+      id: this.productIdCounter,
       title,
       description,
       price,
       thumbnails,
-      code: code,
+      code: code || `P${this.productIdCounter}`,
       stock,
       category,
       statusItem: statusItem || true,
@@ -63,18 +60,22 @@ class ProductManager {
     // Verify if the file is empty.
     if (fileContent) {
       // Verify if the code is already in use
-      // const isCodeInUse = this.products.some(product => product.code === code)
-      const isCodeInUse = await productModel.exists({ code: code })
+      const isCodeInUse = this.products.some(product => product.code === code)
       if (isCodeInUse) {
         throw new Error(
           `The code ${code} is already in use Code must be unique.`
         )
       }
 
-      productModel.create(product)
+      this.products.push(product)
+      this.saveFile()
+      this.productIdCounter++
     } else {
       // If the file is empty, create an array with the first product
-      productModel.create(product)
+
+      this.products.push(product)
+      this.saveFile()
+      this.productIdCounter++
     }
 
     return product
@@ -164,17 +165,15 @@ class ProductManager {
     }
   }
 
-  async checkFile() {
+  checkFile() {
     try {
       // Read the file and parse the content to an array
-      // const fileContent = fs.readFileSync(this.filePath, 'utf8') // Esto lo usabamos antes de usar la base de datos
-      const fileContent = await productModel.find().lean().exec()
+      const fileContent = fs.readFileSync(this.filePath, 'utf8')
       // Verify if the file is empty.
       if (!fileContent) {
         return []
       }
-      // return JSON.parse(fileContent) || [] // Esto lo usabamos antes de usar la base de datos
-      return fileContent || []
+      return JSON.parse(fileContent) || []
     } catch (error) {
       console.error(error)
       return []
@@ -186,7 +185,7 @@ class ProductManager {
   }
 }
 
-const listElements = new ProductManager('./products.txt')
+const listElements = new ProductManagerFS('./products.txt')
 
 // Products Creation Section
 const productOne = {
@@ -324,4 +323,4 @@ listElements.addProduct(productNine)
 listElements.addProduct(productTen)
 */
 
-export default ProductManager
+export default ProductManagerFS
