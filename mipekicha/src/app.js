@@ -3,13 +3,17 @@ import handlerbars from 'express-handlebars'
 import __dirname from './utils.js'
 import viewsRoutes from './routes/views.routes.js'
 import productsRoutes from './routes/product.routes.js'
+import cartRoutes from './routes/cart.routes.js'
 import ProductManager from './controllers/ProductManager.js'
 import { Server } from 'socket.io'
+import mongoose from 'mongoose'
+import logger from 'morgan'
 
 const app = express()
 const PORT = 8080
 const productManager = new ProductManager('./products.txt')
 
+app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -24,6 +28,7 @@ app.use(express.static(__dirname + '/public'))
 // Usamos las rutas importadas
 app.use('/', viewsRoutes)
 app.use('/api/products', productsRoutes)
+app.use('/api/cart', cartRoutes)
 
 const httpServer = app.listen(PORT, () => {
   console.log('Servidor activo en puerto ' + PORT)
@@ -51,4 +56,11 @@ io.on('connection', socket => {
     productManager.deleteProduct(productId)
     io.emit('product-deleted', productId)
   })
+})
+
+mongoose.connect('mongodb://localhost:27017/ecommerce', {}).then(() => {
+  console.log('Conectado a la base de datos')
+})
+.catch(error => {
+  console.log('Error al conectarse a la base de datos', error)
 })

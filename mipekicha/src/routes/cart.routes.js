@@ -1,11 +1,11 @@
 import Router from 'express'
 import CartManager from '../controllers/CartManager.js'
 
-const CartRoutes = Router()
+const route = Router()
 const cartManager = new CartManager('./cart.txt')
 
 // GET
-CartRoutes.get('/api/cart/:cartId', async (req, res) => {
+route.get('/:cartId', async (req, res) => {
   const cartId = parseInt(req.params.cartId)
   try {
     const cart = cartManager.getCartById(cartId)
@@ -19,7 +19,8 @@ CartRoutes.get('/api/cart/:cartId', async (req, res) => {
   }
 })
 
-CartRoutes.post('/api/cart', async (req, res) => {
+// POST
+route.post('/:cartId', async (req, res) => {
   try {
     const cart = cartManager.addCart()
     res.json({ cart })
@@ -28,7 +29,8 @@ CartRoutes.post('/api/cart', async (req, res) => {
   }
 })
 
-CartRoutes.post('/api/cart/:cartId/product/:productId', async (req, res) => {
+// POST
+route.post('/:cartId/product/:productId', async (req, res) => {
   try {
     const productId = parseInt(req.params.productId)
     const products = await productManager.getProductById(productId)
@@ -42,7 +44,8 @@ CartRoutes.post('/api/cart/:cartId/product/:productId', async (req, res) => {
   }
 })
 
-CartRoutes.delete('/api/cart/:cartId', (req, res) => {
+// DELETE
+route.delete('/:cartId', (req, res) => {
   try {
     const cart = cartManager.deleteCart(req.params.cartId)
     res.json({ cart })
@@ -51,4 +54,4 @@ CartRoutes.delete('/api/cart/:cartId', (req, res) => {
   }
 })
 
-export default CartRoutes
+export default route
