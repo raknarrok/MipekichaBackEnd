@@ -1,0 +1,55 @@
+<div>
+    <h1>Chat</h1>
+    <div id="chat">
+        <div id="messages"></div>
+        <ul id="mensaje-list">
+
+        </ul>
+        <input id="mensaje-input" type="text" placeholder="Message">
+        <input id="mensaje-send" value="Enviar" type="button">
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Conectar al servidor de Socket.IO
+        const socket = io()
+
+        // Manejar el evento de conexión exitosa
+        socket.on('connect', () => {
+            console.log('Connected to the server - Client')
+        })
+        // Manejar el evento de desconexión
+        socket.on('disconnect', () => {
+            console.log('Disconnected from the server - Client')
+        })
+
+        const msgList = document.getElementById('mensaje-list')
+        const msgInput = document.getElementById('mensaje-input')
+        const msgButton = document.getElementById('mensaje-send')
+
+        const addMessage = (socketId, message) => {
+            const listElement = document.createElement('li')
+            listElement.textContent = `${socketId}: ${message}`
+            msgList.appendChild(listElement)
+        }
+
+        socket.on('newMessage', ({ socketId, message }) => {
+            console.log('socketId ', socketId)
+            console.log('newMessage ', message)
+            addMessage(socketId, message)
+        })
+
+        socket.on(messages, (initialMessages) => {
+            initialMessages.forEach(({ socketId, message }) => {
+                if (socketId == undefined || message == undefined) return
+                addMessage(socketId, message)
+            })
+        })
+
+        msgButton.addEventListener('click', () => {
+            const message = msgInput.value
+            socket.emit('newMessage', message)
+            addMessage(socket.id, message)
+        })
+
+    </script>
+</div>

@@ -31,4 +31,10 @@ router.get('/live-products', async (req, res) => {
   })
 })
 
+router.get('/chat', async (req, res) => {
+  res.render('chat', {
+    isAdmin: false,
+  })
+})
+
 export default router
