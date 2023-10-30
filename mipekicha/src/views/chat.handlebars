@@ -5,8 +5,10 @@
         <ul id="mensaje-list">
 
         </ul>
-        <input id="mensaje-input" type="text" placeholder="Message">
-        <input id="mensaje-send" value="Enviar" type="button">
+        <form class="message-form" action="/message" method="POST" id="message-form" style="display:block;">
+            <input id="mensaje-input" type="text" placeholder="Message">
+            <input id="mensaje-send" value="Enviar" type="button">
+        </form>
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -22,6 +24,7 @@
             console.log('Disconnected from the server - Client')
         })
 
+        const messageForm = document.getElementById('message-form')
         const msgList = document.getElementById('mensaje-list')
         const msgInput = document.getElementById('mensaje-input')
         const msgButton = document.getElementById('mensaje-send')
@@ -32,23 +35,12 @@
             msgList.appendChild(listElement)
         }
 
-        socket.on('newMessage', ({ socketId, message }) => {
-            console.log('socketId ', socketId)
-            console.log('newMessage ', message)
-            addMessage(socketId, message)
-        })
-
-        socket.on(messages, (initialMessages) => {
-            initialMessages.forEach(({ socketId, message }) => {
-                if (socketId == undefined || message == undefined) return
-                addMessage(socketId, message)
-            })
-        })
-
-        msgButton.addEventListener('click', () => {
+        msgButton.addEventListener('click', e => {
+            e.preventDefault()
             const message = msgInput.value
-            socket.emit('newMessage', message)
+            socket.emit('new-message', message)
             addMessage(socket.id, message)
+            messageForm.reset()
         })
 
     </script>

@@ -5,6 +5,7 @@ import viewsRoutes from './routes/views.routes.js'
 import productsRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
 import ProductManager from './controllers/ProductManager.js'
+import MessageManager from './controllers/MessageManager.js'
 import { Server } from 'socket.io'
 import mongoose from 'mongoose'
 import logger from 'morgan'
@@ -12,6 +13,7 @@ import logger from 'morgan'
 const app = express()
 const PORT = 8080
 const productManager = new ProductManager('./products.txt')
+const messageManager = new MessageManager()
 
 app.use(logger('dev'))
 app.use(express.json())
@@ -56,11 +58,18 @@ io.on('connection', socket => {
     productManager.deleteProduct(productId)
     io.emit('product-deleted', productId)
   })
+
+  socket.on('new-message', message => {
+
+    messageManager.addMessage(message)
+
+    io.emit('message-received', message)
+  })
 })
 
 mongoose.connect('mongodb://localhost:27017/ecommerce', {}).then(() => {
   console.log('Conectado a la base de datos')
 })
-.catch(error => {
-  console.log('Error al conectarse a la base de datos', error)
-})
+  .catch(error => {
+    console.log('Error al conectarse a la base de datos', error)
+  })
