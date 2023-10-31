@@ -20,6 +20,7 @@ productForm.addEventListener('submit', e => {
 
   socket.emit('add-product', formData)
   productForm.reset()
+  location.reload()
 })
 
 // "Escuchamos" el evento que se emite cuando se crea correctamente el nuevo producto
