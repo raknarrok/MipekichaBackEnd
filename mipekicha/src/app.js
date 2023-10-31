@@ -54,9 +54,9 @@ io.on('connection', socket => {
     io.emit('product-added', newProduct)
   })
 
-  socket.on('delete-product', productId => {
-    productManager.deleteProduct(productId)
-    io.emit('product-deleted', productId)
+  socket.on('delete-product', productCode => {
+    productManager.removeProductByCode(productCode)
+    io.emit('product-deleted', productCode)
   })
 
   socket.on('new-message', message => {

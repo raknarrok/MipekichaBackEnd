@@ -81,14 +81,11 @@ class ProductManager {
   }
 
   removeProductByCode(code) {
-    const index = this.products.findIndex(product => product.code === code)
-    if (index !== -1) {
-      this.products.splice(index, 1)
-      this.saveFile()
-    } else {
-      throw new Error(
-        `The code ${code} doesnt exist, please verify and try again.`
-      )
+    // Ejecutamos desde mongo el metodo deleteOne, pasandole como parametro el codigo del producto
+    try {
+      productModel.deleteOne({ code: code }).exec()
+    } catch (error) {
+      console.error(error)
     }
   }
 

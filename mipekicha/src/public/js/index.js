@@ -35,3 +35,14 @@ socket.on('product-added', product => {
     cell.innerText = value
   })
 })
+
+document.querySelectorAll('.delete-button').forEach((button) => {
+  button.addEventListener('click', (e) => {
+      e.preventDefault()
+
+      const deleteCode = e.target.value
+
+      socket.emit('delete-product', deleteCode)
+      location.reload();
+  })
+})
