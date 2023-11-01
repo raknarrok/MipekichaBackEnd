@@ -1,14 +1,21 @@
 <div>
     <h1>Chat</h1>
-    <div id="chat">
+    <div id="form-email-catch" style="display: block;">
+        <input id="email" type="textbox" placeholder="agrega tu email">
+        <input id="captureEmail" value="Confirmar" type="button">
+    </div>
+    <div id="chat-elements" style="display: none;">
+        <h2>Inicia tu chat aqui:</h2>
         <div id="messages"></div>
         <ul id="mensaje-list">
 
         </ul>
-        <form class="message-form" action="/message" method="POST" id="message-form" style="display:block;">
-            <input id="mensaje-input" type="text" placeholder="Message">
-            <input id="mensaje-send" value="Enviar" type="button">
+        <label id="updateEmail"></label>
+        <form class="message-form" action="/message" method="POST" id="message-form">
+            <input id="mensaje-email"  name="user" style="display: none;">
+            <input id="mensaje-input" name="message" type="text" placeholder="Message">
         </form>
+        <input id="mensaje-send" value="Enviar" type="button">
     </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>

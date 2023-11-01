@@ -63,9 +63,9 @@ io.on('connection', socket => {
 
   socket.on('new-message', message => {
 
-    messageManager.addMessage(message)
+    const newMessage = messageManager.addMessage(message)
 
-    io.emit('message-received', message)
+    io.emit('message-received', newMessage)
   })
 })
 

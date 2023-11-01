@@ -5,9 +5,12 @@ class MessageManager {
     constructor() {
     }
 
-    async addMessage( message ) {
-
-        messageModel.create({ message })
+    async addMessage( { user, message } ) {
+        const newMessage = {
+            user,
+            message,
+        }
+        messageModel.create(newMessage)
     }
 }
 

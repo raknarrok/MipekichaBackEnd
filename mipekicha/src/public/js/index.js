@@ -43,6 +43,6 @@ document.querySelectorAll('.delete-button').forEach((button) => {
       const deleteCode = e.target.value
 
       socket.emit('delete-product', deleteCode)
-      location.reload();
+      location.reload()
   })
 })
