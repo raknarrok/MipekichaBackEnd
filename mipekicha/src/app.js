@@ -9,9 +9,11 @@ import MessageManager from './controllers/MessageManager.js'
 import { Server } from 'socket.io'
 import mongoose from 'mongoose'
 import logger from 'morgan'
+import { config } from 'dotenv'
+config()
 
 const app = express()
-const PORT = 8080
+const PORT = process.env.APP_PORT || 8080
 const productManager = new ProductManager('./products.txt')
 const messageManager = new MessageManager()
 
@@ -67,7 +69,9 @@ io.on('connection', socket => {
   })
 })
 
-mongoose.connect('mongodb://localhost:27017/ecommerce', {}).then(() => {
+const uri = `mongodb+srv://${process.env.APP_MONGO_USER}:${process.env.APP_MONGO_PASSWORD}@${process.env.APP_CLUSTER}.sl91xow.mongodb.net/${process.env.APP_DNNAME}?retryWrites=true&w=majority`
+
+mongoose.connect(uri).then(() => {
   console.log('Conectado a la base de datos')
 })
   .catch(error => {
