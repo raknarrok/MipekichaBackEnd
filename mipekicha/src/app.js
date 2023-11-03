@@ -5,6 +5,7 @@ import viewsRoutes from './routes/views.routes.js'
 import productsRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
 import ProductManager from './controllers/ProductManager.js'
+import CartManager from './controllers/CartManager.js'
 import MessageManager from './controllers/MessageManager.js'
 import { Server } from 'socket.io'
 import mongoose from 'mongoose'
@@ -15,6 +16,7 @@ config()
 const app = express()
 const PORT = process.env.APP_PORT || 8080
 const productManager = new ProductManager('./products.txt')
+const cartManager = new CartManager('./cart.txt')
 const messageManager = new MessageManager()
 
 app.use(logger('dev'))
@@ -66,6 +68,16 @@ io.on('connection', socket => {
     const newMessage = messageManager.addMessage(message)
 
     io.emit('message-received', newMessage)
+  })
+
+  socket.on('add-cart', () => {
+    const newCart = cartManager.addCart()
+    io.emit('cart-added', newCart)
+  })
+
+  socket.on('clear-cart', clearId => {
+    cartManager.removeAllProducts(clearId)
+    io.emit('cart-cleared', clearId)
   })
 })
 

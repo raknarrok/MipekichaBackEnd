@@ -3,15 +3,16 @@ Go to cd src
 Run node app.js
 */
 import fs from 'fs'
+import cartModel from '../models/cart.model.js'
 
 class CartManager {
-  constructor (filePath) {
+  constructor(filePath) {
     this.cartIdCounter = 1
     this.filePath = filePath
     this.carts = this.checkFile()
   }
 
-  addCart () {
+  addCartFS() {
     const maxId = this.carts.reduce((max, cart) => (cart.id > max ? cart.id : max), 0)
     this.cartIdCounter = maxId + 1
     const fileContent = this.checkFile()
@@ -27,7 +28,19 @@ class CartManager {
     this.saveFile()
   }
 
-  deleteCart (cartId) {
+  async addCart() {
+    const fileContent = this.checkFile()
+    console.log(fileContent)
+
+    // Create New Cart
+    const cart = {
+      products: []
+    }
+
+    await cartModel.create(cart)
+  }
+
+  deleteCartSF(cartId) {
     const cart = this.carts.find((cart) => cart.id === parseInt(cartId))
     if (!cart) {
       throw new Error(`The cart with id ${cartId} was not found.`)
@@ -37,7 +50,27 @@ class CartManager {
     this.saveFile()
   }
 
-  addProductToCart (cartId, productId, bodyRequest) {
+  deleteCart(cartId) {
+    // Ejecutamos desde mongo el metodo deleteOne, pasandole como parametro el ID del producto
+    try {
+      cartModel.deleteOne({ _id: cartId }).exec()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async removeAllProducts(cartId) {
+    // Ejecutamos desde mongo el metodo deleteOne, pasandole como parametro el ID del producto
+    try {
+      const resetCart = { products: [] }
+      await cartModel.findByIdAndUpdate({ _id: cartId }, resetCart, { new: true })
+      console.log("1 document updated")
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  addProductToCart(cartId, productId, bodyRequest) {
     const cart = this.carts.find((cart) => cart.id === parseInt(cartId))
     if (!cart) {
       throw new Error(`The cart with id ${cartId} was not found.`)
@@ -76,7 +109,11 @@ class CartManager {
     }
   }
 
-  getCartById (cartId) {
+  getAllCarts() {
+    return this.checkFile()
+  }
+
+  getCartById(cartId) {
     const cart = this.carts.find((cart) => cart.id === parseInt(cartId))
     if (!cart) {
       throw new Error(`The cart with id ${cartId} was not found.`)
@@ -84,22 +121,24 @@ class CartManager {
     return cart
   }
 
-  checkFile () {
+  async checkFile() {
     try {
       // Read the file and parse the content to an array
-      const fileContent = fs.readFileSync(this.filePath, 'utf8')
+      // const fileContent = fs.readFileSync(this.filePath, 'utf8')
+      const fileContent = cartModel.find().lean().exec()
       // Verify if the file is empty.
       if (!fileContent) {
         return []
       }
-      return JSON.parse(fileContent) || []
+      // return JSON.parse(fileContent) || []
+      return fileContent || []
     } catch (error) {
       console.error(error)
       return []
     }
   }
 
-  saveFile () {
+  saveFile() {
     fs.writeFileSync(this.filePath, JSON.stringify(this.carts, null, 2))
   }
 }

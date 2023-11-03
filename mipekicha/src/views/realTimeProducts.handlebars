@@ -15,10 +15,11 @@
                     <th>statusItem</th>
                     <th>Eliminar</th>
                 </tr>
+            </thead>
             <tbody>
                 {{#each products}}
                     <tr>
-                        <td>{{this.id}}</td>
+                        <td>{{this._id}}</td>
                         <td>{{this.title}}</td>
                         <td>{{this.description}}</td>
                         <td>{{this.price}}</td>
@@ -35,7 +36,6 @@
                     </tr>
                 {{/each}}
             </tbody>
-            </thead>
         </table>
     </div>
     <!-- Form to add a new product This is the way to add another template -->

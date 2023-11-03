@@ -5,10 +5,23 @@ const route = Router()
 const cartManager = new CartManager('./cart.txt')
 
 // GET
+route.get('/', async (req, res) => {
+  try {
+    const carts = await cartManager.getAllCarts()
+    if (carts.length === 0) {
+      res.status(404).json({ error: error.message })
+    } else {
+      res.json({ carts })
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+})
+
 route.get('/:cartId', async (req, res) => {
   const cartId = parseInt(req.params.cartId)
   try {
-    const cart = cartManager.getCartById(cartId)
+    const cart = cartManager.getAllCarts(cartId)
     if (cart.length === 0) {
       res.status(404).json({ error: 'No existe el carro' })
     } else {
@@ -20,7 +33,7 @@ route.get('/:cartId', async (req, res) => {
 })
 
 // POST
-route.post('/:cartId', async (req, res) => {
+route.post('/', async (req, res) => {
   try {
     const cart = cartManager.addCart()
     res.json({ cart })

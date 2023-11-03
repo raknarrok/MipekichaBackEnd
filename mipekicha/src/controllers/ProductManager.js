@@ -71,10 +71,10 @@ class ProductManager {
         )
       }
 
-      productModel.create(product)
+      await productModel.create(product)
     } else {
       // If the file is empty, create an array with the first product
-      productModel.create(product)
+      await productModel.create(product)
     }
 
     return product

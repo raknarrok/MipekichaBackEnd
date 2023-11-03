@@ -1,0 +1,38 @@
+<div>
+    <h1>Cart</h1>
+    <div>
+        <table border="1" id="cart-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>ProductId</th>
+                    <th>Quantity</th>
+                    <th>Vaciar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each carts}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    {{#each this.products}}
+                    <td>{{this.id}}</td>
+                    <td>{{this.quantity}}</td>
+                    {{/each}}
+                    <td>
+                        <form id="cart-clear-form" action="/cart/{{this._id}}" method="POST">
+                            <button value="{{this._id}}" class="clear-button" type="submit">Vaciar</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
+<!-- Form to add a new product This is the way to add another template -->
+{{> cartForm}}
+
+
+<!-- Socket.io -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/cart.js"></script>

@@ -2,6 +2,7 @@ import express from 'express'
 import ProductManager from '../controllers/ProductManager.js'
 import __dirname from '../utils.js'
 import productModel from '../models/product.model.js'
+import cartModel from '../models/cart.model.js'
 
 const productManager = new ProductManager('./products.txt')
 
@@ -34,6 +35,15 @@ router.get('/live-products', async (req, res) => {
 router.get('/chat', async (req, res) => {
   res.render('chat', {
     isAdmin: false,
+  })
+})
+
+router.get('/cart', async (req, res) => {
+  const allCarts = await cartModel.find().lean().exec()
+  console.log('CART to be render', allCarts)
+
+  res.render('carts', {
+    carts: allCarts,
   })
 })
 
