@@ -1,5 +1,14 @@
 const socket = io()
 
+// Manejar el evento de conexión exitosa
+socket.on('connect', () => {
+  console.log('Connected to the server - Client')
+})
+// Manejar el evento de desconexión
+socket.on('disconnect', () => {
+  console.log('Disconnected from the server - Client')
+})
+
 // Capturamos los elementos del HTML
 const productForm = document.getElementById('product-form')
 const productsTable = document.getElementById('live-products-table')
@@ -38,11 +47,11 @@ socket.on('product-added', product => {
 
 document.querySelectorAll('.delete-button').forEach((button) => {
   button.addEventListener('click', (e) => {
-      e.preventDefault()
+    e.preventDefault()
 
-      const deleteCode = e.target.value
+    const deleteCode = e.target.value
 
-      socket.emit('delete-product', deleteCode)
-      location.reload()
+    socket.emit('delete-product', deleteCode)
+    location.reload()
   })
 })

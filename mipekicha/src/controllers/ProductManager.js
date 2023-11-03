@@ -153,11 +153,19 @@ class ProductManager {
     return this.checkFile()
   }
 
-  getProducts(limit) {
+  getProductsFS(limit) {
     if (!limit) {
       return this.products
     } else {
       return this.products.slice(0, limit)
+    }
+  }
+
+  getProducts(limit) {
+    if (!limit) {
+      return productModel.find().limit(5).lean().exec()
+    } else {
+      return productModel.find().limit(limit).lean().exec()
     }
   }
 

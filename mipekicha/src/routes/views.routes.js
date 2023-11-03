@@ -12,8 +12,14 @@ const router = express.Router()
 
 router.get('/', async (req, res) => {
 
+  const limit = parseInt(req.query.limit) || 5
+  const page = parseInt(req.query.page) || 1
+  const sort = req.query.sort || 'asc'
+  const skip = (page - 1) * limit
+
   // const allProducts = productManager.getAllProducts() // Esto lo usabamos antes de usar la base de datos
-  const allProducts = await productModel.find().lean().exec()
+  // const allProducts = await productModel.find().limit(limit).lean().exec()
+  const allProducts = await productModel.find().sort({ _id: sort }).skip(skip).limit(limit).lean().exec()
 
   // This is the name under Views > home.handlebars
   res.render('home', {
@@ -24,7 +30,8 @@ router.get('/', async (req, res) => {
 
 router.get('/live-products', async (req, res) => {
   // const allProducts = productManager.getAllProducts() // Esto lo usabamos antes de usar la base de datos
-  const allProducts = await productModel.find().lean().exec()
+  const limit = req.query.limit || 5
+  const allProducts = await productModel.find().limit(limit).lean().exec()
 
   res.render('realTimeProducts', {
     isAdmin: false,
@@ -39,7 +46,8 @@ router.get('/chat', async (req, res) => {
 })
 
 router.get('/cart', async (req, res) => {
-  const allCarts = await cartModel.find().lean().exec()
+  const limit = req.query.limit || 5
+  const allCarts = await cartModel.find().limit(limit).lean().exec()
   console.log('CART to be render', allCarts)
 
   res.render('carts', {
