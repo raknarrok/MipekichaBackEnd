@@ -17,26 +17,42 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each products}}
-                    <tr>
-                        <td>{{this._id}}</td>
-                        <td>{{this.title}}</td>
-                        <td>{{this.description}}</td>
-                        <td>{{this.price}}</td>
-                        <td>{{this.thumbnails}}</td>
-                        <td>{{this.code}}</td>
-                        <td>{{this.stock}}</td>
-                        <td>{{this.category}}</td>
-                        <td>{{this.statusItem}}</td>
-                        <td>
-                            <form id="product-delete-form" action="/products/{{this.code}}" method="POST">
-                                <button value="{{this.code}}" class="delete-button" type="submit">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
+                {{#each products.docs}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.thumbnails}}</td>
+                    <td>{{this.code}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.statusItem}}</td>
+                    <td>
+                        <form id="product-delete-form" action="/products/{{this.code}}" method="POST">
+                            <button value="{{this.code}}" class="delete-button" type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
                 {{/each}}
+                <div>
+                    Total de productos: {{products.totalDocs}}
+                </div>
             </tbody>
         </table>
+        <div id="paginationSection">
+            <div id="paginationButtons">
+                {{#if products.hasPrevPage}}
+                <a id="previousPageButton" class="paginationButton" href="{{products.prevLink}}">Previous</a>
+                {{/if}}
+                {{#if products.hasNextPage}}
+                <a id="nextPageButton" class="paginationButton" href="{{products.nextLink}}">Next</a>
+                {{/if}}
+            </div>
+            <div id="paginationInfo">
+                <p>Page {{products.page}} of {{products.totalPages}}</p>
+            </div>
+        </div>
     </div>
     <!-- Form to add a new product This is the way to add another template -->
     {{> productForm}}

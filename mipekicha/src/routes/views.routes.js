@@ -30,8 +30,19 @@ router.get('/', async (req, res) => {
 
 router.get('/live-products', async (req, res) => {
   // const allProducts = productManager.getAllProducts() // Esto lo usabamos antes de usar la base de datos
-  const limit = req.query.limit || 5
-  const allProducts = await productModel.find().limit(limit).lean().exec()
+  // const allProducts = await productModel.find().limit(limitQuery).lean().exec() // Esto lo usabamos antes de usar paginacion
+  const limitQuery = parseInt(req.query.limit) || 5
+  const pageQuery = parseInt(req.query.page) || 1
+  const allProducts = await productModel.paginate({}, {
+    limit: limitQuery,
+    page: pageQuery,
+    lean: true
+  })
+
+  console.log(allProducts)
+
+  allProducts.prevLink = allProducts.hasPrevPage ? `/live-products?page=${allProducts.prevPage}&limit=${limitQuery}` : ''
+  allProducts.nextLink = allProducts.hasNextPage ? `/live-products?page=${allProducts.nextPage}&limit=${limitQuery}` : ''
 
   res.render('realTimeProducts', {
     isAdmin: false,
