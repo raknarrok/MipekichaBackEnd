@@ -1,8 +1,10 @@
 import Router from 'express'
 import CartManager from '../controllers/CartManager.js'
+import ProductManager from '../controllers/ProductManager.js'
 
 const route = Router()
 const cartManager = new CartManager('./cart.txt')
+const productManager = new ProductManager('./products.txt')
 
 // GET
 route.get('/', async (req, res) => {
@@ -42,10 +44,9 @@ route.post('/', async (req, res) => {
   }
 })
 
-// POST
 route.post('/:cartId/product/:productId', async (req, res) => {
   try {
-    const productId = parseInt(req.params.productId)
+    const productId = req.params.productId
     const products = await productManager.getProductById(productId)
     if (products === 0) {
       return res.status(404).json({ error: 'Item Not Found' })
@@ -57,8 +58,30 @@ route.post('/:cartId/product/:productId', async (req, res) => {
   }
 })
 
+// PUT
+route.put('/:cartId', async (req, res) => {
+  const bodyRequest = req.body
+  const cartId = parseInt(req.params.cartId)
+  const productId = parseInt(req.params.productId)
+  try {
+    const cart = cartManager.addProductToCart(cartId, productId, bodyRequest)
+    res.json({ cart })
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+})
+
 // DELETE
 route.delete('/:cartId', (req, res) => {
+  try {
+    const cart = cartManager.removeAllProducts(req.params.cartId)
+    res.json({ cart })
+  } catch (error) {
+    res.status(404).json({ error: error.message })
+  }
+})
+
+route.delete('/:cartId/products/:producId', (req, res) => {
   try {
     const cart = cartManager.deleteCart(req.params.cartId)
     res.json({ cart })

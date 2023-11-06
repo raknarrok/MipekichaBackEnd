@@ -11,7 +11,7 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each carts}}
+                {{#each carts.docs}}
                 <tr>
                     <td>{{this._id}}</td>
                     {{#each this.products}}
@@ -25,8 +25,24 @@
                     </td>
                 </tr>
                 {{/each}}
+                <div>
+                    Total de Carritos: {{carts.totalDocs}}
+                </div>
             </tbody>
         </table>
+        <div id="paginationSection">
+            <div id="paginationButtons">
+                {{#if carts.hasPrevPage}}
+                <a id="previousPageButton" class="paginationButton" href="{{carts.prevLink}}">Previous</a>
+                {{/if}}
+                {{#if carts.hasNextPage}}
+                <a id="nextPageButton" class="paginationButton" href="{{carts.nextLink}}">Next</a>
+                {{/if}}
+            </div>
+            <div id="paginationInfo">
+                <p>Page {{carts.page}} of {{carts.totalPages}}</p>
+            </div>
+        </div>
     </div>
 </div>
 <!-- Form to add a new product This is the way to add another template -->

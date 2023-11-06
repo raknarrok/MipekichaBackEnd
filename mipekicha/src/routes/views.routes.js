@@ -12,14 +12,37 @@ const router = express.Router()
 
 router.get('/', async (req, res) => {
 
-  const limit = parseInt(req.query.limit) || 5
-  const page = parseInt(req.query.page) || 1
+  const limitQuery = parseInt(req.query.limit) || 5
+  const pageQuery = parseInt(req.query.page) || 1
   const sort = req.query.sort || 'asc'
-  const skip = (page - 1) * limit
+  const sortField = req.query.sortField || '_id'
+  const allProducts = await productModel.paginate({}, {
+    limit: limitQuery,
+    page: pageQuery,
+    sort: { [sortField]: sort },
+    lean: true
+  })
+
+  const baseUrl = `&limit=${limitQuery}&sort=${sort}&sortField=${sortField}`
+  const toPayload = {
+    status: 'success',
+    payload: allProducts.docs,
+    ...allProducts,
+    prevLink: allProducts.hasPrevPage ? `/?page=${allProducts.prevPage}${baseUrl}` : '',
+    nextLink: allProducts.hasNextPage ? `/?page=${allProducts.nextPage}${baseUrl}` : '',
+  }
+
+  delete toPayload.docs
+
+  console.log(toPayload)
+  // console.log(allProducts)
+
+  allProducts.prevLink = allProducts.hasPrevPage ? `/?page=${allProducts.prevPage}${baseUrl}` : ''
+  allProducts.nextLink = allProducts.hasNextPage ? `/?page=${allProducts.nextPage}${baseUrl}` : ''
 
   // const allProducts = productManager.getAllProducts() // Esto lo usabamos antes de usar la base de datos
   // const allProducts = await productModel.find().limit(limit).lean().exec()
-  const allProducts = await productModel.find().sort({ _id: sort }).skip(skip).limit(limit).lean().exec()
+  // const allProducts = await productModel.find().sort({ _id: sort }).skip(skip).limit(limit).lean().exec()
 
   // This is the name under Views > home.handlebars
   res.render('home', {
@@ -33,16 +56,28 @@ router.get('/live-products', async (req, res) => {
   // const allProducts = await productModel.find().limit(limitQuery).lean().exec() // Esto lo usabamos antes de usar paginacion
   const limitQuery = parseInt(req.query.limit) || 5
   const pageQuery = parseInt(req.query.page) || 1
+  const sort = req.query.sort || 'asc'
+  const sortField = req.query.sortField || '_id'
   const allProducts = await productModel.paginate({}, {
     limit: limitQuery,
     page: pageQuery,
+    sort: { [sortField]: sort },
     lean: true
   })
 
-  console.log(allProducts)
+  const baseUrl = `&limit=${limitQuery}&sort=${sort}&sortField=${sortField}`
+  const toPayload = {
+    status: 'success',
+    payload: allProducts.docs,
+    ...allProducts,
+    prevLink: allProducts.hasPrevPage ? `/live-products?page=${allProducts.prevPage}${baseUrl}` : '',
+    nextLink: allProducts.hasNextPage ? `/live-products?page=${allProducts.nextPage}${baseUrl}` : '',
+  }
 
-  allProducts.prevLink = allProducts.hasPrevPage ? `/live-products?page=${allProducts.prevPage}&limit=${limitQuery}` : ''
-  allProducts.nextLink = allProducts.hasNextPage ? `/live-products?page=${allProducts.nextPage}&limit=${limitQuery}` : ''
+  delete toPayload.docs
+
+  allProducts.prevLink = allProducts.hasPrevPage ? `/live-products?page=${allProducts.prevPage}${baseUrl}` : ''
+  allProducts.nextLink = allProducts.hasNextPage ? `/live-products?page=${allProducts.nextPage}${baseUrl}` : ''
 
   res.render('realTimeProducts', {
     isAdmin: false,
@@ -57,9 +92,21 @@ router.get('/chat', async (req, res) => {
 })
 
 router.get('/cart', async (req, res) => {
-  const limit = req.query.limit || 5
-  const allCarts = await cartModel.find().limit(limit).lean().exec()
-  console.log('CART to be render', allCarts)
+  const limitQuery = parseInt(req.query.limit) || 5
+  const pageQuery = parseInt(req.query.page) || 1
+  const sort = req.query.sort || 'asc'
+  const sortField = req.query.sortField || '_id'
+
+  const baseUrl = `&limit=${limitQuery}&sort=${sort}&sortField=${sortField}`
+  const allCarts = await cartModel.paginate({}, {
+    limit: limitQuery,
+    page: pageQuery,
+    sort: { [sortField]: sort },
+    lean: true
+  })
+
+  allCarts.prevLink = allCarts.hasPrevPage ? `/cart?page=${allCarts.prevPage}${baseUrl}` : ''
+  allCarts.nextLink = allCarts.hasNextPage ? `/cart?page=${allCarts.nextPage}${baseUrl}` : ''
 
   res.render('carts', {
     carts: allCarts,

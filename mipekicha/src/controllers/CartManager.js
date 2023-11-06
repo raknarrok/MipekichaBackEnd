@@ -70,8 +70,11 @@ class CartManager {
     }
   }
 
-  addProductToCart(cartId, productId, bodyRequest) {
-    const cart = this.carts.find((cart) => cart.id === parseInt(cartId))
+  // Add/Update Single Product to Cart
+  async addProductToCart(cartId, productId, bodyRequest) {
+    const cart = await cartModel.findById(cartId).lean().exec()
+    console.log('Cart Information', cart)
+
     if (!cart) {
       throw new Error(`The cart with id ${cartId} was not found.`)
     }
@@ -81,30 +84,18 @@ class CartManager {
       throw new Error('BAD REQUEST: Bad Request: Hey!!! The request body must contain a valid "products" array with product objects.')
     }
 
-    // Read the file and parse the content to an array
-    const fileContent = this.checkFile()
-
-    // Verify if the file is empty.
-    if (!fileContent) {
-      throw new Error(`The cart with id ${cartId} was not found.`)
-    }
+    const stringProductId = productId.toString()
 
     // Verify if the product is already in the cart
-    const isProductInCart = cart.products.some((product) => product.id === parseInt(productId))
+    const isProductInCart = cart.products.some((product) => product.id.toString() === stringProductId)
+
     if (isProductInCart) {
       // If is in the cart, update the quantity
-      const product = cart.products.find((product) => product.id === parseInt(productId))
-      const index = cart.products.indexOf(product)
-      cart.products[index].quantity += bodyRequest.products[0].quantity
-      this.saveFile()
+      await cartModel.updateOne({ _id: cartId, 'products.id': stringProductId }, { $inc: { 'products.$.quantity': bodyRequest.products[0].quantity } })
+
       return cart
     } else {
-      // If is not in the cart, add the product
-      const id = { id: parseInt(productId) }
-      const product = bodyRequest.products[0]
-      const mergeElements = { ...id, ...product }
-      cart.products.push(mergeElements)
-      this.saveFile()
+      await cartModel.updateOne({ _id: cartId }, { $push: { products: { id: productId, quantity: bodyRequest.products[0].quantity } } })
       return cart
     }
   }

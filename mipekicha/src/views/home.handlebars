@@ -17,31 +17,47 @@
                     <th>category</th>
                     <th>statusItem</th>
                 </tr>
-            <tbody>
-                {{#each products}}
-                    <tr>
-                        <td>{{this._id}}</td>
-                        <td>{{this.title}}</td>
-                        <td>{{this.description}}</td>
-                        <td>{{this.price}}</td>
-                        <td>{{this.thumbnails}}</td>
-                        <td>{{this.code}}</td>
-                        <td>{{this.stock}}</td>
-                        <td>{{this.category}}</td>
-                        <td>{{this.statusItem}}</td>
-                    </tr>
-                {{/each}}
-            </tbody>
             </thead>
+            <tbody>
+                {{#each products.docs}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    <td>{{this.title}}</td>
+                    <td>{{this.description}}</td>
+                    <td>{{this.price}}</td>
+                    <td>{{this.thumbnails}}</td>
+                    <td>{{this.code}}</td>
+                    <td>{{this.stock}}</td>
+                    <td>{{this.category}}</td>
+                    <td>{{this.statusItem}}</td>
+                </tr>
+                {{/each}}
+                <div>
+                    Total de productos: {{products.totalDocs}}
+                </div>
+            </tbody>
         </table>
+        <div id="paginationSection">
+            <div id="paginationButtons">
+                {{#if products.hasPrevPage}}
+                <a id="previousPageButton" class="paginationButton" href="{{products.prevLink}}">Previous</a>
+                {{/if}}
+                {{#if products.hasNextPage}}
+                <a id="nextPageButton" class="paginationButton" href="{{products.nextLink}}">Next</a>
+                {{/if}}
+            </div>
+            <div id="paginationInfo">
+                <p>Page {{products.page}} of {{products.totalPages}}</p>
+            </div>
+        </div>
     </div>
 
     <!-- Form to add a new product This is the way to add another template -->
     {{!-- {{> productForm}} --}}
 
     {{#if isAdmin}}
-        <p> Si tienes permisos </p>
+    <p> Si tienes permisos </p>
     {{else}}
-        <p>No tienes permisos</p>
+    <p>No tienes permisos</p>
     {{/if}}
 </div>

@@ -114,7 +114,7 @@ class ProductManager {
   }
 
   getProductById(id) {
-    const product = this.products.find(product => product.id === id)
+    const product = productModel.findById(id)
     if (!product) {
       return 0
     }
