@@ -4,7 +4,7 @@ import { Schema } from "mongoose"
 
 const cartCollection = 'carts'
 const productInCartSchema = new mongoose.Schema({
-    id: Schema.Types.ObjectId,
+    id: { type: Schema.Types.ObjectId, ref: 'Product' },
     quantity: Number,
 })
 

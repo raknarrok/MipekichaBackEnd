@@ -63,10 +63,22 @@ io.on('connection', socket => {
     io.emit('product-deleted', productCode)
   })
 
+  socket.on('add-to-cart', data => {
+
+    const requestBody = {
+      products: [
+        {
+          quantity: data.quantity
+        }
+      ]
+    }
+
+    const newCart = cartManager.addProductToCart(data.cartId, data.productId, requestBody)
+    io.emit('added-to-cart', newCart)
+  })
+
   socket.on('new-message', message => {
-
     const newMessage = messageManager.addMessage(message)
-
     io.emit('message-received', newMessage)
   })
 
@@ -79,6 +91,7 @@ io.on('connection', socket => {
     cartManager.removeAllProducts(clearId)
     io.emit('cart-cleared', clearId)
   })
+
 })
 
 const uri = `mongodb+srv://${process.env.APP_MONGO_USER}:${process.env.APP_MONGO_PASSWORD}@${process.env.APP_CLUSTER}.sl91xow.mongodb.net/${process.env.APP_DNNAME}?retryWrites=true&w=majority`

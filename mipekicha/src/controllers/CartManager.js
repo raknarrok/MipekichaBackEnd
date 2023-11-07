@@ -73,7 +73,6 @@ class CartManager {
   // Add/Update Single Product to Cart
   async addProductToCart(cartId, productId, bodyRequest) {
     const cart = await cartModel.findById(cartId).lean().exec()
-    console.log('Cart Information', cart)
 
     if (!cart) {
       throw new Error(`The cart with id ${cartId} was not found.`)

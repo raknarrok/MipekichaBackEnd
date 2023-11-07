@@ -71,6 +71,20 @@ route.put('/:cartId', async (req, res) => {
   }
 })
 
+route.put('/:cartId/product/:productId', async (req, res) => {
+  try {
+    const productId = req.params.productId
+    const products = await productManager.getProductById(productId)
+    if (products === 0) {
+      return res.status(404).json({ error: 'Item Not Found' })
+    }
+    const cart = cartManager.addProductToCart(req.params.cartId, req.params.productId, req.body)
+    res.json({ cart })
+  } catch (error) {
+    res.status(404).json({ error: error.message })
+  }
+})
+
 // DELETE
 route.delete('/:cartId', (req, res) => {
   try {
