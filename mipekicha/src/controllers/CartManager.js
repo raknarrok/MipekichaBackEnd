@@ -72,6 +72,7 @@ class CartManager {
 
   // Add/Update Single Product to Cart
   async addProductToCart(cartId, productId, bodyRequest) {
+
     const cart = await cartModel.findById(cartId).lean().exec()
 
     if (!cart) {
@@ -86,15 +87,15 @@ class CartManager {
     const stringProductId = productId.toString()
 
     // Verify if the product is already in the cart
-    const isProductInCart = cart.products.some((product) => product.id.toString() === stringProductId)
+    const isProductInCart = cart.products.some((products) => products.product.toString() === stringProductId)
 
     if (isProductInCart) {
       // If is in the cart, update the quantity
-      await cartModel.updateOne({ _id: cartId, 'products.id': stringProductId }, { $inc: { 'products.$.quantity': bodyRequest.products[0].quantity } })
+      await cartModel.updateOne({ _id: cartId, 'products.product': stringProductId }, { $inc: { 'products.$.quantity': bodyRequest.products[0].quantity } })
 
       return cart
     } else {
-      await cartModel.updateOne({ _id: cartId }, { $push: { products: { id: productId, quantity: bodyRequest.products[0].quantity } } })
+      await cartModel.updateOne({ _id: cartId }, { $push: { products: { product: productId, quantity: bodyRequest.products[0].quantity } } })
       return cart
     }
   }

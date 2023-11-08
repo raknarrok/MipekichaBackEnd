@@ -1,0 +1,35 @@
+<div>
+    <h1>Cart Details</h1>
+    <table border="1" id="live-products-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Cantidad</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>price</th>
+                    <th>thumbnails</th>
+                    <th>code</th>
+                    <th>stock</th>
+                    <th>category</th>
+                    <th>statusItem</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each cart.products}}
+                <tr>
+                    <td>{{this.product._id}}</td>
+                    <td>{{this.quantity}}</td>
+                    <td>{{this.product.title}}</td>
+                    <td>{{this.product.description}}</td>
+                    <td>{{this.product.price}}</td>
+                    <td>{{this.product.thumbnails}}</td>
+                    <td>{{this.product.code}}</td>
+                    <td>{{this.product.stock}}</td>
+                    <td>{{this.product.category}}</td>
+                    <td>{{this.product.statusItem}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+</div>

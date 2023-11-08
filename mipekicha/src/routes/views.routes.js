@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
 
   delete toPayload.docs
 
-  console.log(toPayload)
+  // console.log(toPayload)
   // console.log(allProducts)
 
   allProducts.prevLink = allProducts.hasPrevPage ? `/?page=${allProducts.prevPage}${baseUrl}` : ''
@@ -110,6 +110,16 @@ router.get('/cart', async (req, res) => {
 
   res.render('carts', {
     carts: allCarts,
+  })
+})
+
+router.get('/cart/:cartId', async (req, res) => {
+
+  const cartId = req.params.cartId
+  const cartDetailPopulated = await cartModel.findOne({ _id: cartId }).populate('products.product').lean().exec()
+
+  res.render('cartdetails', {
+    cart: cartDetailPopulated,
   })
 })
 
