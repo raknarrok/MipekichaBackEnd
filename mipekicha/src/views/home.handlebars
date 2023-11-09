@@ -1,7 +1,13 @@
 <div>
 
     <h1>HOME</h1>
-    <h1> Hola estos son los productos enviados sin sockets</h1>
+    <h1> Hola {{userData.first_name}} estos son los productos enviados sin sockets</h1>
+    <div> {{#if adminRole}}
+        <h3> Hola {{userData.email}} eres admin</h3>
+        {{else}}
+        <h3> Hola {{userData.email}} eres usuario</h3>
+        {{/if}}
+    </div>
     <div>
         Product List:
         <table border="1">

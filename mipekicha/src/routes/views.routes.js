@@ -12,16 +12,16 @@ const router = express.Router()
 
 
 router.get('/', (req, res) => {
-  if (res.session?.user) {
-    return res.redirect('/profile')
+  if (req.session?.user) {
+    return res.redirect('/products')
   }
 
   res.render('login', {})
 })
 
 router.get('/login', (req, res) => {
-  if(res.session?.user) {
-    return res.redirect('/profile')
+  if(req.session?.user) {
+    return res.redirect('/products')
   }
 
   res.render('login', {})
@@ -48,6 +48,7 @@ function auth (req, res, next) {
 // router.get('/', async (req, res) => {
 router.get('/products', async (req, res) => {
 
+  const user = req.session.user = req.session.user
   const limitQuery = parseInt(req.query.limit) || 5
   const pageQuery = parseInt(req.query.page) || 1
   const sort = req.query.sort || 'asc'
@@ -64,8 +65,8 @@ router.get('/products', async (req, res) => {
     status: 'success',
     payload: allProducts.docs,
     ...allProducts,
-    prevLink: allProducts.hasPrevPage ? `/?page=${allProducts.prevPage}${baseUrl}` : '',
-    nextLink: allProducts.hasNextPage ? `/?page=${allProducts.nextPage}${baseUrl}` : '',
+    prevLink: allProducts.hasPrevPage ? `/products?page=${allProducts.prevPage}${baseUrl}` : '',
+    nextLink: allProducts.hasNextPage ? `/products?page=${allProducts.nextPage}${baseUrl}` : '',
   }
 
   delete toPayload.docs
@@ -73,8 +74,10 @@ router.get('/products', async (req, res) => {
   // console.log(toPayload)
   // console.log(allProducts)
 
-  allProducts.prevLink = allProducts.hasPrevPage ? `/?page=${allProducts.prevPage}${baseUrl}` : ''
-  allProducts.nextLink = allProducts.hasNextPage ? `/?page=${allProducts.nextPage}${baseUrl}` : ''
+  allProducts.prevLink = allProducts.hasPrevPage ? `/products?page=${allProducts.prevPage}${baseUrl}` : ''
+  allProducts.nextLink = allProducts.hasNextPage ? `/products?page=${allProducts.nextPage}${baseUrl}` : ''
+
+  const isAdmin = user.email === 'adminCoder@coder.com' ? true : false
 
   // const allProducts = productManager.getAllProducts() // Esto lo usabamos antes de usar la base de datos
   // const allProducts = await productModel.find().limit(limit).lean().exec()
@@ -84,6 +87,8 @@ router.get('/products', async (req, res) => {
   res.render('home', {
     isAdmin: false,
     products: allProducts,
+    userData: user,
+    adminRole: isAdmin,
   })
 })
 

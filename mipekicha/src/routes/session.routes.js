@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
 
     req.session.user = user
 
-    res.redirect('/profile')
+    res.redirect('/products')
 })
 
 router.get('/logout', async(req, res) => {
