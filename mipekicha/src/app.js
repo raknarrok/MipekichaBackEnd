@@ -4,6 +4,7 @@ import __dirname from './utils.js'
 import viewsRoutes from './routes/views.routes.js'
 import productsRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
+import sessionRoutes from './routes/session.routes.js'
 import ProductManager from './controllers/ProductManager.js'
 import CartManager from './controllers/CartManager.js'
 import MessageManager from './controllers/MessageManager.js'
@@ -11,6 +12,8 @@ import { Server } from 'socket.io'
 import mongoose from 'mongoose'
 import logger from 'morgan'
 import { config } from 'dotenv'
+import session from 'express-session'
+import MongoStore from 'connect-mongo'
 config()
 
 const app = express()
@@ -31,10 +34,27 @@ app.set('views', __dirname + '/views') // Indicate the folder where the files ar
 // Static files configuration
 app.use(express.static(__dirname + '/public'))
 
+const mongoUrl = `mongodb+srv://${process.env.APP_MONGO_USER}:${process.env.APP_MONGO_PASSWORD}@${process.env.APP_CLUSTER}.sl91xow.mongodb.net/${process.env.APP_DNNAME}?retryWrites=true&w=majority`
+
+// Session Configuration
+app.use(session({
+  store: MongoStore.create({
+    mongoUrl,
+    dbName: process.env.APP_DNNAME,
+    ttl: 100
+  }),
+  secret: 'secret',
+  resave: true,
+  saveUninitialized: true
+}))
+
 // Usamos las rutas importadas
 app.use('/', viewsRoutes)
+// app.use('/', viewsRoutes)
+app.use('/products', viewsRoutes)
 app.use('/api/products', productsRoutes)
 app.use('/api/cart', cartRoutes)
+app.use('/api/session', sessionRoutes)
 
 const httpServer = app.listen(PORT, () => {
   console.log('Servidor activo en puerto ' + PORT)
@@ -94,9 +114,7 @@ io.on('connection', socket => {
 
 })
 
-const uri = `mongodb+srv://${process.env.APP_MONGO_USER}:${process.env.APP_MONGO_PASSWORD}@${process.env.APP_CLUSTER}.sl91xow.mongodb.net/${process.env.APP_DNNAME}?retryWrites=true&w=majority`
-
-mongoose.connect(uri).then(() => {
+mongoose.connect(mongoUrl).then(() => {
   console.log('Conectado a la base de datos')
 })
   .catch(error => {

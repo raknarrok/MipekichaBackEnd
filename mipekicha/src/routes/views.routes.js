@@ -10,7 +10,43 @@ const productManager = new ProductManager('./products.txt')
 // No van a estar precedidas por ningun sufijo
 const router = express.Router()
 
-router.get('/', async (req, res) => {
+
+router.get('/', (req, res) => {
+  if (res.session?.user) {
+    return res.redirect('/profile')
+  }
+
+  res.render('login', {})
+})
+
+router.get('/login', (req, res) => {
+  if(res.session?.user) {
+    return res.redirect('/profile')
+  }
+
+  res.render('login', {})
+})
+
+router.get('/singup', (req, res) => {
+  if(req.session?.user) {
+    return res.redirect('/profile')
+  }
+  res.render('register', {})
+})
+
+router.get('/profile', auth, (req, res) => {
+  const user = req.session.user
+
+  res.render('profile', user)
+})
+
+function auth (req, res, next) {
+  if(req.session.user) return next()
+  res.redirect('/')
+}
+
+// router.get('/', async (req, res) => {
+router.get('/products', async (req, res) => {
 
   const limitQuery = parseInt(req.query.limit) || 5
   const pageQuery = parseInt(req.query.page) || 1
