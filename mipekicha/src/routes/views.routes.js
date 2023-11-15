@@ -1,8 +1,9 @@
 import express from 'express'
-import ProductManager from '../controllers/ProductManager.js'
+/* import ProductManager from '../controllers/ProductManager.js'*/
+import ProductManager from '../dao/mongoManager/ProductManager.js'
 import __dirname from '../utils.js'
-import productModel from '../models/product.model.js'
-import cartModel from '../models/cart.model.js'
+import productModel from '../dao/models/product.model.js'
+import cartModel from '../dao/models/cart.model.js'
 
 const productManager = new ProductManager('./products.txt')
 
@@ -34,15 +35,8 @@ router.get('/', async (req, res) => {
 
   delete toPayload.docs
 
-  // console.log(toPayload)
-  // console.log(allProducts)
-
   allProducts.prevLink = allProducts.hasPrevPage ? `/?page=${allProducts.prevPage}${baseUrl}` : ''
   allProducts.nextLink = allProducts.hasNextPage ? `/?page=${allProducts.nextPage}${baseUrl}` : ''
-
-  // const allProducts = productManager.getAllProducts() // Esto lo usabamos antes de usar la base de datos
-  // const allProducts = await productModel.find().limit(limit).lean().exec()
-  // const allProducts = await productModel.find().sort({ _id: sort }).skip(skip).limit(limit).lean().exec()
 
   // This is the name under Views > home.handlebars
   res.render('home', {
@@ -52,8 +46,6 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/live-products', async (req, res) => {
-  // const allProducts = productManager.getAllProducts() // Esto lo usabamos antes de usar la base de datos
-  // const allProducts = await productModel.find().limit(limitQuery).lean().exec() // Esto lo usabamos antes de usar paginacion
   const limitQuery = parseInt(req.query.limit) || 5
   const pageQuery = parseInt(req.query.page) || 1
   const sort = req.query.sort || 'asc'

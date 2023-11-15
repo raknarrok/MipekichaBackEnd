@@ -4,9 +4,9 @@ import __dirname from './utils.js'
 import viewsRoutes from './routes/views.routes.js'
 import productsRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
-import ProductManager from './controllers/ProductManager.js'
-import CartManager from './controllers/CartManager.js'
-import MessageManager from './controllers/MessageManager.js'
+import ProductManager from './dao/mongoManager/ProductManager.js'
+import CartManager from './dao/mongoManager/CartManager.js'
+import MessageManager from './dao/mongoManager/MessageManager.js'
 import { Server } from 'socket.io'
 import mongoose from 'mongoose'
 import logger from 'morgan'
@@ -15,8 +15,8 @@ config()
 
 const app = express()
 const PORT = process.env.APP_PORT || 8080
-const productManager = new ProductManager('./products.txt')
-const cartManager = new CartManager('./cart.txt')
+const productManager = new ProductManager()
+const cartManager = new CartManager()
 const messageManager = new MessageManager()
 
 app.use(logger('dev'))

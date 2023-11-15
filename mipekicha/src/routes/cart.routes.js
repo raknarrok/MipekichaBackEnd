@@ -1,10 +1,10 @@
 import Router from 'express'
-import CartManager from '../controllers/CartManager.js'
-import ProductManager from '../controllers/ProductManager.js'
+import CartManager from '../dao/mongoManager/CartManager.js'
+import ProductManager from '../dao/mongoManager/ProductManager.js'
 
 const route = Router()
-const cartManager = new CartManager('./cart.txt')
-const productManager = new ProductManager('./products.txt')
+const cartManager = new CartManager()
+const productManager = new ProductManager()
 
 // GET
 route.get('/', async (req, res) => {
@@ -21,7 +21,7 @@ route.get('/', async (req, res) => {
 })
 
 route.get('/:cartId', async (req, res) => {
-  const cartId = parseInt(req.params.cartId)
+  const cartId = req.params.cartId
   try {
     const cart = cartManager.getAllCarts(cartId)
     if (cart.length === 0) {

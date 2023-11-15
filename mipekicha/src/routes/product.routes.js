@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import ProductManager from '../controllers/ProductManager.js'
+import ProductManager from '../dao/mongoManager/ProductManager.js'
 
 const route = Router()
 const productManager = new ProductManager('./products.txt')
@@ -23,7 +23,7 @@ route.get('/', async (req, res) => {
 })
 
 route.get('/:productId', async (req, res) => {
-  const productId = parseInt(req.params.productId)
+  const productId = req.params.productId
   try {
     const products = await productManager.getProductById(productId)
     if (products === 0) {
@@ -51,7 +51,7 @@ route.get('/code/:productCode', async (req, res) => {
 })
 
 // POST
-route.post('', (req, res) => {
+route.post('/', (req, res) => {
   try {
     const product = productManager.addProduct(req.body)
     res.status(200).json({ product })
@@ -62,7 +62,8 @@ route.post('', (req, res) => {
 
 // PUT
 route.put('/:productId', async (req, res) => {
-  const productId = parseInt(req.params.productId)
+  const productId = req.params.productId
+  console.log('Product ID: ', productId)
   try {
     const product = productManager.updateProductById(productId, req.body)
     res.status(200).json({ product })
@@ -73,7 +74,7 @@ route.put('/:productId', async (req, res) => {
 
 // DELETE
 route.delete('/:productId', async (req, res) => {
-  const productId = parseInt(req.params.productId)
+  const productId = req.params.productId
   try {
     const product = productManager.removeProductById(productId)
     res.status(200).json({ product })
