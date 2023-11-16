@@ -3,6 +3,7 @@ import ProductManager from '../controllers/ProductManager.js'
 import __dirname from '../utils.js'
 import productModel from '../models/product.model.js'
 import cartModel from '../models/cart.model.js'
+import passport from 'passport'
 
 const productManager = new ProductManager('./products.txt')
 
@@ -20,7 +21,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/login', (req, res) => {
-  if(req.session?.user) {
+  if (req.session?.user) {
     return res.redirect('/products')
   }
 
@@ -28,21 +29,23 @@ router.get('/login', (req, res) => {
 })
 
 router.get('/singup', (req, res) => {
-  if(req.session?.user) {
+  if (req.session?.user) {
     return res.redirect('/profile')
   }
   res.render('register', {})
 })
 
 router.get('/profile', auth, (req, res) => {
+
   const user = req.session.user
 
-  res.render('profile', user)
+  return res.render('profile', user)
 })
 
-function auth (req, res, next) {
-  if(req.session.user) return next()
-  res.redirect('/')
+function auth(req, res, next) {
+  if (req.session.user) return next()
+  res.status(401)
+  return res.redirect('/login')
 }
 
 // router.get('/', async (req, res) => {
@@ -161,6 +164,30 @@ router.get('/cart/:cartId', async (req, res) => {
 
   res.render('cartdetails', {
     cart: cartDetailPopulated,
+  })
+})
+
+router.get(
+  '/login-github',
+  passport.authenticate('github', { scope: ['profile', 'email'] }),
+  async (req, res) => { }
+)
+
+router.get(
+  '/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }),
+  async (req, res) => {
+    console.log('Callback', req.user)
+    req.session.user = req.user
+
+    console.log(req.session)
+    res.redirect('/')
+  })
+
+router.get('/logout', async (req, res) => {
+  req.session.destroy(err => {
+    if (err) return res.send('Logout error')
+
+    res.redirect('/login')
   })
 })
 

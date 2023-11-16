@@ -14,6 +14,8 @@ import logger from 'morgan'
 import { config } from 'dotenv'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
+import passport from 'passport'
+import initializePassport from './config/passport.config.js'
 config()
 
 const app = express()
@@ -41,6 +43,10 @@ app.use(session({
   store: MongoStore.create({
     mongoUrl,
     dbName: process.env.APP_DNNAME,
+    mongoOptions: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    },
     ttl: 100
   }),
   secret: 'secret',
@@ -48,9 +54,13 @@ app.use(session({
   saveUninitialized: true
 }))
 
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
+
+
 // Usamos las rutas importadas
 app.use('/', viewsRoutes)
-// app.use('/', viewsRoutes)
 app.use('/products', viewsRoutes)
 app.use('/api/products', productsRoutes)
 app.use('/api/cart', cartRoutes)
