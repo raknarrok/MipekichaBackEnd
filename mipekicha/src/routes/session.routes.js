@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import passport from 'passport'
 import userModel from '../models/user.model.js'
+import { createHash } from '../utils.js'
 
 const router = Router()
 
@@ -29,8 +30,15 @@ router.get('/logout', async (req, res) => {
 })
 
 router.post('/singup', async (req, res) => {
-    const user = req.body
-    await userModel.create(user)
+
+    const newUser = {
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        age: req.body.age,
+        email: req.body.email,
+        password: createHash(req.body.password)
+    }
+    await userModel.create(newUser)
     res.redirect('/login')
 })
 

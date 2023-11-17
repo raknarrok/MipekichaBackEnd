@@ -74,17 +74,10 @@ router.get('/products', async (req, res) => {
 
   delete toPayload.docs
 
-  // console.log(toPayload)
-  // console.log(allProducts)
-
   allProducts.prevLink = allProducts.hasPrevPage ? `/products?page=${allProducts.prevPage}${baseUrl}` : ''
   allProducts.nextLink = allProducts.hasNextPage ? `/products?page=${allProducts.nextPage}${baseUrl}` : ''
 
   const isAdmin = user.email === 'adminCoder@coder.com' ? true : false
-
-  // const allProducts = productManager.getAllProducts() // Esto lo usabamos antes de usar la base de datos
-  // const allProducts = await productModel.find().limit(limit).lean().exec()
-  // const allProducts = await productModel.find().sort({ _id: sort }).skip(skip).limit(limit).lean().exec()
 
   // This is the name under Views > home.handlebars
   res.render('home', {
@@ -96,8 +89,7 @@ router.get('/products', async (req, res) => {
 })
 
 router.get('/live-products', async (req, res) => {
-  // const allProducts = productManager.getAllProducts() // Esto lo usabamos antes de usar la base de datos
-  // const allProducts = await productModel.find().limit(limitQuery).lean().exec() // Esto lo usabamos antes de usar paginacion
+
   const limitQuery = parseInt(req.query.limit) || 5
   const pageQuery = parseInt(req.query.page) || 1
   const sort = req.query.sort || 'asc'
