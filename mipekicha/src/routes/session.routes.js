@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import passport from 'passport'
 import userModel from '../models/user.model.js'
-import { createHash } from '../utils.js'
+import { createHash, isValidPassword } from '../utils.js'
 
 const router = Router()
 
@@ -30,27 +30,42 @@ router.get('/logout', async (req, res) => {
 })
 
 router.post('/singup', async (req, res) => {
+    try {
+        const newUser = req.body
+        newUser.password = createHash(newUser.password)
 
-    const newUser = {
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        age: req.body.age,
-        email: req.body.email,
-        password: createHash(req.body.password)
+        await userModel.create(newUser)
+        res.redirect('/login')
+
+    } catch (error) {
+        // TODO: Create a view to show the error or popup
+        console.log(error)
+        res.status(500).send('Error to create user - please contact support')
     }
-    await userModel.create(newUser)
-    res.redirect('/login')
 })
 
 router.post('/login', async (req, res) => {
 
-    const { email, password } = req.body
-    const user = await userModel.findOne({ email, password })
-    if (!user) return res.redirect('/login')
+    try {
+        const { email, password } = req.body;
+        const user = await userModel.findOne({ email }).lean().exec();
 
-    req.session.user = user
+        if (!user || !isValidPassword(user, password)) {
+            throw new Error('Unauthorized')
+        }
 
-    res.redirect('/products')
+        req.session.user = user;
+
+        res.redirect('/products')
+    } catch (error) {
+        console.error(error);
+
+        if (error.message === 'Unauthorized') {
+            return res.status(401).redirect('/login')
+        }
+
+        res.status(500).send('An error occurred while logging in')
+    }
 })
 
 export default router
