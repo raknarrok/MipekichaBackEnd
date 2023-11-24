@@ -14,6 +14,19 @@ const router = express.Router()
 router.get('/', async (req, res) => {
 
   try {
+    // This is the name under Views > home.handlebars
+    res.render('home', {
+      isAdmin: false
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ status: 'Error', error: 'An error occurred while getting products' })
+  }
+})
+
+router.get('/products', async (req, res) => {
+
+  try {
     const limitQuery = getQueryParam(req.query.limit, 5)
     const pageQuery = getQueryParam(req.query.page, 1)
     const sort = req.query.sort || 'asc'
@@ -45,7 +58,7 @@ router.get('/', async (req, res) => {
     console.log(toPayload)
 
     // This is the name under Views > home.handlebars
-    res.render('home', {
+    res.render('products', {
       isAdmin: false,
       products: toPayload,
     })

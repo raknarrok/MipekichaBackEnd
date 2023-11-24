@@ -13,7 +13,7 @@
             <tbody>
                 {{#each carts.payload}}
                 <tr>
-                    <td>{{this._id}}</td>
+                    <td><a href="/cart/{{this._id}}">{{this._id}}</a></td>
                     {{#each this.products}}
                     <td>{{this.product}}</td>
                     <td>{{this.quantity}}</td>

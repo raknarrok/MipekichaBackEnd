@@ -1,71 +1,10 @@
 <div>
 
     <h1>HOME</h1>
-    <h1> Hola estos son los productos enviados sin sockets</h1>
-    <div>
-        Product List:
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>price</th>
-                    <th>thumbnails</th>
-                    <th>code</th>
-                    <th>stock</th>
-                    <th>category</th>
-                    <th>statusItem</th>
-                    <th>Add To Cart</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each products.payload}}
-                <tr>
-                    <td>{{this._id}}</td>
-                    <td>{{this.title}}</td>
-                    <td>{{this.description}}</td>
-                    <td>{{this.price}}</td>
-                    <td>{{this.thumbnails}}</td>
-                    <td>{{this.code}}</td>
-                    <td>{{this.stock}}</td>
-                    <td>{{this.category}}</td>
-                    <td>{{this.statusItem}}</td>
-                    <td>
-                        <form id="product-add-form" action="/products/{{this._id}}" method="POST">
-                            <button value="{{this._id}}" class="add-button" type="submit">Agregar</button>
-                        </form>
-                    </td>
-                </tr>
-                {{/each}}
-                <div>
-                    Total de productos: {{products.totalDocs}}
-                </div>
-            </tbody>
-        </table>
-        <div id="paginationSection">
-            <div id="paginationButtons">
-                {{#if products.hasPrevPage}}
-                <a id="previousPageButton" class="paginationButton" href="{{products.prevLink}}">Previous</a>
-                {{/if}}
-                {{#if products.hasNextPage}}
-                <a id="nextPageButton" class="paginationButton" href="{{products.nextLink}}">Next</a>
-                {{/if}}
-            </div>
-            <div id="paginationInfo">
-                <p>Page {{products.page}} of {{products.totalPages}}</p>
-            </div>
-        </div>
-    </div>
+    <h1> Hola puedes navegar en nuestro NavBar para explorar los productos y carritos</h1>
 
     <!-- Form to add a new product This is the way to add another template -->
     {{!-- {{> productForm}} --}}
-
-    {{#if isAdmin}}
-    <p> Si tienes permisos </p>
-    {{else}}
-    <p>No tienes permisos</p>
-    {{/if}}
 </div>
 
 <!-- Socket.io -->
