@@ -147,9 +147,9 @@ router.get('/cart', async (req, res) => {
   }
 })
 
-router.get('/cart/:cartId', async (req, res) => {
+router.get('/cart/:cid', async (req, res) => {
 
-  const cartId = req.params.cartId
+  const cartId = req.params.cid
   const cartDetailPopulated = await cartModel.findOne({ _id: cartId }).populate('products.product').lean().exec()
 
   res.render('cartdetails', {

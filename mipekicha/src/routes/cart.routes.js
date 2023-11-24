@@ -20,10 +20,10 @@ route.get('/', async (req, res) => {
   }
 })
 
-route.get('/:cartId', async (req, res) => {
-  const cartId = req.params.cartId
+route.get('/:cid', async (req, res) => {
+  const cartId = req.params.cid
   try {
-    const cart = cartManager.getAllCarts(cartId)
+    const cart = await cartManager.getCartById(cartId)
     if (cart.length === 0) {
       res.status(404).json({ error: 'No existe el carro' })
     } else {
@@ -37,33 +37,33 @@ route.get('/:cartId', async (req, res) => {
 // POST
 route.post('/', async (req, res) => {
   try {
-    const cart = cartManager.addCart()
+    const cart = await cartManager.addCart()
     res.json({ cart })
   } catch (error) {
     res.status(500).json({ error: error.message })
   }
 })
 
-route.post('/:cartId/product/:productId', async (req, res) => {
+route.post('/:cid/product/:pid', async (req, res) => {
   try {
-    const productId = req.params.productId
+    const productId = req.params.pid
     const products = await productManager.getProductById(productId)
     if (products === 0) {
       return res.status(404).json({ error: 'Item Not Found' })
     }
-    const cart = cartManager.addProductToCart(req.params.cartId, req.params.productId, req.body)
+    const cart = await cartManager.addProductToCart(req.params.cid, req.params.pid, req.body)
     res.json({ cart })
   } catch (error) {
     res.status(404).json({ error: error.message })
   }
 })
 
-// PUT
-route.put('/:cartId', async (req, res) => {
-  const bodyRequest = req.body
-  const cartId = parseInt(req.params.cartId)
-  const productId = parseInt(req.params.productId)
+// PUT TODO: Revisar Legacy Code
+route.put('/:cid', async (req, res) => {
   try {
+    const bodyRequest = req.body
+    const cartId = parseInt(req.params.cid)
+    const productId = parseInt(req.params.productId)
     const cart = cartManager.addProductToCart(cartId, productId, bodyRequest)
     res.json({ cart })
   } catch (error) {
@@ -71,14 +71,14 @@ route.put('/:cartId', async (req, res) => {
   }
 })
 
-route.put('/:cartId/product/:productId', async (req, res) => {
+route.put('/:cid/product/:pid', async (req, res) => {
   try {
-    const productId = req.params.productId
+    const productId = req.params.pid
     const products = await productManager.getProductById(productId)
     if (products === 0) {
       return res.status(404).json({ error: 'Item Not Found' })
     }
-    const cart = cartManager.addProductToCart(req.params.cartId, req.params.productId, req.body)
+    const cart = await cartManager.addProductToCart(req.params.cid, req.params.pid, req.body)
     res.json({ cart })
   } catch (error) {
     res.status(404).json({ error: error.message })
@@ -86,18 +86,18 @@ route.put('/:cartId/product/:productId', async (req, res) => {
 })
 
 // DELETE
-route.delete('/:cartId', (req, res) => {
+route.delete('/:cid', async (req, res) => {
   try {
-    const cart = cartManager.removeAllProducts(req.params.cartId)
+    const cart = await cartManager.deleteCart(req.params.cid)
     res.json({ cart })
   } catch (error) {
     res.status(404).json({ error: error.message })
   }
 })
 
-route.delete('/:cartId/products/:producId', (req, res) => {
+route.delete('/:cid/products/:pid', async (req, res) => {
   try {
-    const cart = cartManager.deleteCart(req.params.cartId)
+    const cart = await cartManager.removeProduct(req.params.cid, req.params.pid)
     res.json({ cart })
   } catch (error) {
     res.status(404).json({ error: error.message })

@@ -36,10 +36,9 @@ class ProductManager {
     }
 
     // Read the file and parse the content to an array
-    const fileContent = this.checkDb()
+    const documentContent = this.checkDb()
 
     const product = {
-      // id: this.productIdCounter,
       title,
       description,
       price,
@@ -51,7 +50,7 @@ class ProductManager {
     }
 
     // Verify if the file is empty.
-    if (fileContent) {
+    if (documentContent) {
       // Verify if the code is already in use
       const isCodeInUse = await productModel.exists({ code: code })
       if (isCodeInUse) {
@@ -78,30 +77,21 @@ class ProductManager {
       )
     }
 
-    // Read the file and parse the content to an array
-    const fileContent = this.checkDb()
+    // Verify if the code is already in use
     const code = bodyRequest.code
-    // Verify if the file is empty.
-    if (fileContent) {
-      // Verify if the code is already in use
-      if (code !== undefined) {
-        const isCodeInUse = await productModel.exists({ code: code })
-        if (isCodeInUse) {
-          throw new Error(
-            `The code ${code} is already in use Code must be unique.`
-          )
-        }
-      }
-
-      await productModel.findByIdAndUpdate({ _id: id }, bodyRequest, {
-        new: true,
-      })
-    } else {
-      // If the file is empty, create an array with the first product
-      await productModel.findByIdAndUpdate({ _id: id }, bodyRequest, {
-        new: true,
-      })
+    const isCodeInUse = await productModel.exists({ code: code })
+    if (isCodeInUse) {
+      throw new Error(
+        `The code ${code} is already in use Code must be unique.`
+      )
     }
+
+    // Update the document and return the updated document
+    const updatedProduct = await productModel.findByIdAndUpdate(id, bodyRequest, {
+      new: true,
+    })
+
+    return updatedProduct
   }
 
   // DELETE
@@ -160,12 +150,12 @@ class ProductManager {
   async checkDb() {
     try {
       // Read the file and parse the content to an array
-      const fileContent = await productModel.find().lean().exec()
+      const documentContent = await productModel.find().lean().exec()
       // Verify if the file is empty.
-      if (!fileContent) {
+      if (!documentContent) {
         return []
       }
-      return fileContent || []
+      return documentContent || []
     } catch (error) {
       console.error(error)
       return []

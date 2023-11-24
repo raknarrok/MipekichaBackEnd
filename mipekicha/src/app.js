@@ -34,7 +34,7 @@ app.use(express.static(__dirname + '/public'))
 // Usamos las rutas importadas
 app.use('/', viewsRoutes)
 app.use('/api/products', productsRoutes)
-app.use('/api/cart', cartRoutes)
+app.use('/api/carts', cartRoutes)
 
 const httpServer = app.listen(PORT, () => {
   console.log('Servidor activo en puerto ' + PORT)

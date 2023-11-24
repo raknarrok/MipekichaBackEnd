@@ -10,7 +10,7 @@ class CartManager {
   }
 
   async addCart() {
-    const fileContent = this.checkDb()
+    const documentContent = this.checkDb()
 
     // Create New Cart
     const cart = {
@@ -23,18 +23,29 @@ class CartManager {
   async deleteCart(cartId) {
     // Ejecutamos desde mongo el metodo deleteOne, pasandole como parametro el ID del producto
     try {
-      await cartModel.deleteOne({ _id: cartId }).exec()
+      await cartModel.deleteOne({ _id: cartId })
+      return 'Cart Deleted'
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async removeProduct(cartId, productId) {
+    try {
+      await cartModel.findByIdAndUpdate(
+        cartId,
+        { $pull: { products: { product: productId } } },
+        { new: true }
+      )
     } catch (error) {
       console.error(error)
     }
   }
 
   async removeAllProducts(cartId) {
-    // Ejecutamos desde mongo el metodo deleteOne, pasandole como parametro el ID del producto
     try {
       const resetCart = { products: [] }
       await cartModel.findByIdAndUpdate({ _id: cartId }, resetCart, { new: true })
-
     } catch (error) {
       console.error(error)
     }
@@ -62,27 +73,33 @@ class CartManager {
     if (isProductInCart) {
       // If is in the cart, update the quantity
       await cartModel.updateOne({ _id: cartId, 'products.product': stringProductId }, { $inc: { 'products.$.quantity': bodyRequest.products[0].quantity } })
-
-      return cart
     } else {
       await cartModel.updateOne({ _id: cartId }, { $push: { products: { product: productId, quantity: bodyRequest.products[0].quantity } } })
-      return cart
     }
+    return await cartModel.findById(cartId).lean().exec()
   }
 
   async getAllCarts() {
     return await this.checkDb()
   }
 
+  async getCartById(cartId) {
+    const cart = await cartModel.findOne({ _id: cartId }).populate('products.product').lean().exec()
+    if (!cart) {
+      return 0
+    }
+    return cart
+  }
+
   async checkDb() {
     try {
       // Read the file and parse the content to an array
-      const fileContent = await cartModel.find().lean().exec()
+      const documentContent = await cartModel.find().lean().exec()
       // Verify if the file is empty.
-      if (!fileContent) {
+      if (!documentContent) {
         return []
       }
-      return fileContent || []
+      return documentContent || []
     } catch (error) {
       console.error(error)
       return []

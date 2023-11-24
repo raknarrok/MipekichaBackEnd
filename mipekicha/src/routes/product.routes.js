@@ -22,8 +22,8 @@ route.get('/', async (req, res) => {
   }
 })
 
-route.get('/:productId', async (req, res) => {
-  const productId = req.params.productId
+route.get('/:pid', async (req, res) => {
+  const productId = req.params.pid
   try {
     const products = await productManager.getProductById(productId)
     if (products === 0) {
@@ -51,9 +51,9 @@ route.get('/code/:productCode', async (req, res) => {
 })
 
 // POST
-route.post('/', (req, res) => {
+route.post('/', async (req, res) => {
   try {
-    const product = productManager.addProduct(req.body)
+    const product = await productManager.addProduct(req.body)
     res.status(200).json({ product })
   } catch (error) {
     res.status(400).json({ error: error.message })
@@ -61,11 +61,11 @@ route.post('/', (req, res) => {
 })
 
 // PUT
-route.put('/:productId', async (req, res) => {
-  const productId = req.params.productId
+route.put('/:pid', async (req, res) => {
+  const productId = req.params.pid
   console.log('Product ID: ', productId)
   try {
-    const product = productManager.updateProductById(productId, req.body)
+    const product = await productManager.updateProductById(productId, req.body)
     res.status(200).json({ product })
   } catch (error) {
     res.status(400).json({ error: error.message })
@@ -73,10 +73,10 @@ route.put('/:productId', async (req, res) => {
 })
 
 // DELETE
-route.delete('/:productId', async (req, res) => {
-  const productId = req.params.productId
+route.delete('/:pid', async (req, res) => {
+  const productId = req.params.pid
   try {
-    const product = productManager.removeProductById(productId)
+    const product = await productManager.removeProductById(productId)
     res.status(200).json({ product })
   } catch (error) {
     res.status(400).json({ error: error.message })
