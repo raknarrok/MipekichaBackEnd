@@ -88,7 +88,7 @@ route.put('/:cid/product/:pid', async (req, res) => {
 // DELETE
 route.delete('/:cid', async (req, res) => {
   try {
-    const cart = await cartManager.deleteCart(req.params.cid)
+    const cart = await cartManager.removeAllProducts(req.params.cid)
     res.json({ cart })
   } catch (error) {
     res.status(404).json({ error: error.message })
