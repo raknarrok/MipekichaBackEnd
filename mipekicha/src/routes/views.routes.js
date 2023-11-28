@@ -41,8 +41,8 @@ router.get('/products', async (req, res) => {
     })
 
     const baseUrl = `&limit=${limitQuery}&sort=${sort}&sortField=${sortField}`
-    const prevLink = allProducts.hasPrevPage ? `/?page=${allProducts.prevPage}${baseUrl}` : null
-    const nextLink = allProducts.hasNextPage ? `/?page=${allProducts.nextPage}${baseUrl}` : null
+    const prevLink = allProducts.hasPrevPage ? `/products?page=${allProducts.prevPage}${baseUrl}` : null
+    const nextLink = allProducts.hasNextPage ? `/products?page=${allProducts.nextPage}${baseUrl}` : null
 
     const toPayload = {
       status: allProducts.docs.length > 0 ? 'success' : 'error',
