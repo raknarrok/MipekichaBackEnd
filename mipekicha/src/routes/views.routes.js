@@ -1,9 +1,9 @@
 import express from 'express'
-/* import ProductManager from '../controllers/ProductManager.js'*/
-import ProductManager from '../dao/mongoManager/ProductManager.js'
 import __dirname from '../utils.js'
+import ProductManager from '../dao/mongoManager/ProductManager.js'
 import productModel from '../dao/models/product.model.js'
 import cartModel from '../dao/models/cart.model.js'
+import passport from 'passport'
 
 const productManager = new ProductManager('./products.txt')
 
@@ -24,6 +24,7 @@ router.get('/', async (req, res) => {
   }
 })
 
+// PRODUCTS
 router.get('/products', async (req, res) => {
 
   try {
@@ -54,8 +55,6 @@ router.get('/products', async (req, res) => {
     delete toPayload.docs
     delete toPayload.limit
     delete toPayload.pagingCounter
-
-    console.log(toPayload)
 
     // This is the name under Views > home.handlebars
     res.render('products', {
@@ -99,8 +98,6 @@ router.get('/live-products', async (req, res) => {
     delete toPayload.limit
     delete toPayload.pagingCounter
 
-    console.log(toPayload)
-
     res.render('realTimeProducts', {
       isAdmin: false,
       products: toPayload,
@@ -112,12 +109,14 @@ router.get('/live-products', async (req, res) => {
   }
 })
 
+// CHAT
 router.get('/chat', async (req, res) => {
   res.render('chat', {
     isAdmin: false,
   })
 })
 
+// CARTS
 router.get('/cart', async (req, res) => {
 
   try {
@@ -149,8 +148,6 @@ router.get('/cart', async (req, res) => {
     delete toPayload.limit
     delete toPayload.pagingCounter
 
-    console.log(toPayload)
-
     res.render('carts', {
       carts: toPayload,
     })
@@ -169,6 +166,57 @@ router.get('/cart/:cid', async (req, res) => {
     cart: cartDetailPopulated,
   })
 })
+
+// Login & Logout
+router.get('/login', (req, res) => {
+  if (req.session?.user) {
+    return res.redirect('/products')
+  }
+
+  res.render('login', {})
+})
+
+router.get('/singup', (req, res) => {
+  if (req.session?.user) {
+    return res.redirect('/profile')
+  }
+  res.render('register', {})
+})
+
+router.get('/profile', auth, (req, res) => {
+  const user = req.session.user
+  return res.render('profile', user)
+})
+
+router.get(
+  '/login-github',
+  passport.authenticate('github', { scope: ['profile', 'email'] }),
+  async (req, res) => { }
+)
+
+router.get(
+  '/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }),
+  async (req, res) => {
+    console.log('Callback', req.user)
+    req.session.user = req.user
+
+    console.log(req.session)
+    res.redirect('/')
+  })
+
+router.get('/logout', async (req, res) => {
+  req.session.destroy(err => {
+    if (err) return res.send('Logout error')
+
+    res.redirect('/login')
+  })
+})
+
+function auth(req, res, next) {
+  if (req.session.user) return next()
+  res.status(401)
+  return res.redirect('/login')
+}
 
 function getQueryParam(param, defaultValue) {
   return parseInt(param) || defaultValue
