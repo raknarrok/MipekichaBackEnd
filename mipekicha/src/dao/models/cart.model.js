@@ -1,6 +1,5 @@
 import mongoose from "mongoose"
 import mongoosePaginate from "mongoose-paginate-v2"
-import { Schema } from "mongoose"
 
 const cartCollection = 'carts'
 const productInCartSchema = new mongoose.Schema({

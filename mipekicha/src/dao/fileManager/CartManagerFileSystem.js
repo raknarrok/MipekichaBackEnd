@@ -4,7 +4,7 @@ Run node app.js
 */
 import fs from 'fs'
 
-class CartManagerFS {
+class CartManagerFileSystem {
   constructor (filePath) {
     this.cartIdCounter = 1
     this.filePath = filePath
@@ -104,4 +104,4 @@ class CartManagerFS {
   }
 }
 
-export default CartManagerFS
+export default CartManagerFileSystem

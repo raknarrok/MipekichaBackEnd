@@ -1,4 +1,3 @@
-import fs from 'fs'
 import messageModel from '../models/message.model.js'
 
 class MessageManager {

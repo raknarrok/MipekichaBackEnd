@@ -4,7 +4,7 @@ Run node app.js
 */
 import fs from 'fs'
 
-class ProductManagerFS {
+class ProductManagerFileSystem {
   constructor(filePath) {
     this.productIdCounter = 1
     this.filePath = filePath
@@ -323,4 +323,4 @@ listElements.addProduct(productNine)
 listElements.addProduct(productTen)
 */
 
-export default ProductManagerFS
+export default ProductManagerFileSystem
