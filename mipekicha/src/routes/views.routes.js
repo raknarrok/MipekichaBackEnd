@@ -64,7 +64,7 @@ router.get('/products', async (req, res) => {
     })
   } catch (error) {
     console.error(error)
-    res.status(500).send({ status: 'Error', error: 'An error occurred while getting products' })
+    res.status(500).send({ status: 'Error', error: 'An error occurred while getting products' + error })
   }
 })
 
