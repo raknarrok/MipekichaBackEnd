@@ -1,17 +1,7 @@
 body {
-  background-color: #ddd;
+  background-color: rgb(212, 211, 211);
 }
 
-.main-content {
-  margin: 0 2rem;
-}
-
-.product-form-container {
-  margin-top: 1rem;
-}
-
-.product-form {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 10px;
+.paddingFirstSection {
+  padding-top: 8rem;
 }

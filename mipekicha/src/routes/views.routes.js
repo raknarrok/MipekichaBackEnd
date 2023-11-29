@@ -16,16 +16,16 @@ router.get('/', async (req, res) => {
   try {
     // This is the name under Views > home.handlebars
     res.render('home', {
-      isAdmin: false
+      isAdmin: false,
     })
   } catch (error) {
     console.error(error)
-    res.status(500).send({ status: 'Error', error: 'An error occurred while getting products' })
+    res.status(500).send({ status: 'Error', error: 'An error occurred while getting server response' })
   }
 })
 
 // PRODUCTS
-router.get('/products', async (req, res) => {
+router.get('/products', auth, async (req, res) => {
 
   try {
     const limitQuery = getQueryParam(req.query.limit, 5)
@@ -56,11 +56,12 @@ router.get('/products', async (req, res) => {
     delete toPayload.limit
     delete toPayload.pagingCounter
 
+    const user = req.session.user
+
     // This is the name under Views > home.handlebars
     res.render('products', {
-      isAdmin: false,
       products: toPayload,
-      cartId:  req.session.user.cart,
+      cartId: user.cart,
     })
   } catch (error) {
     console.error(error)
@@ -68,9 +69,10 @@ router.get('/products', async (req, res) => {
   }
 })
 
-router.get('/live-products', async (req, res) => {
+router.get('/live-products', auth, async (req, res) => {
 
   try {
+    const userRole = req.session.user.role
     const limitQuery = getQueryParam(req.query.limit, 5)
     const pageQuery = getQueryParam(req.query.page, 1)
     const sort = req.query.sort || 'asc'
@@ -100,7 +102,7 @@ router.get('/live-products', async (req, res) => {
     delete toPayload.pagingCounter
 
     res.render('realTimeProducts', {
-      isAdmin: false,
+      isAdmin: userRole === 'admin' ? true : false,
       products: toPayload,
     })
 
@@ -118,7 +120,7 @@ router.get('/chat', async (req, res) => {
 })
 
 // CARTS
-router.get('/cart', async (req, res) => {
+router.get('/cart', auth, async (req, res) => {
 
   try {
     const limitQuery = getQueryParam(req.query.limit, 5)
@@ -164,7 +166,7 @@ router.get('/cart/:cid', async (req, res) => {
   const cartDetailPopulated = await cartModel.findOne({ _id: cartId }).populate('products.product').lean().exec()
 
   res.render('cartdetails', {
-    cart: cartDetailPopulated,
+    cart: cartDetailPopulated
   })
 })
 
