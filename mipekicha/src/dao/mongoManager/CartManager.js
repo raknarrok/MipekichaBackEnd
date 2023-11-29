@@ -1,7 +1,3 @@
-/*
-Go to cd src
-Run node app.js
-*/
 import cartModel from '../models/cart.model.js'
 
 class CartManager {

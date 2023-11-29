@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import passport from 'passport'
+import SessionManager from '../dao/mongoManager/SessionManager.js'
 
+const sessionManager = new SessionManager()
 const router = Router()
 
 router.get(
@@ -55,6 +57,19 @@ router.get('/logout', (req, res) => {
             res.status(500).render('errors/base', { error: err })
         } else res.redirect('/login')
     })
+})
+
+router.get('/current', async (req, res) => {
+    try{
+        const current = await sessionManager.getAllSessions()
+        if( current.length === 0){
+            res.status(404).send({ error: 'No hay sesiones activas' })
+        } else {
+            res.status(200).send({ current })
+        }
+    } catch (error) {
+        res.status(500).send({ error: error.message })
+    }
 })
 
 export default router
