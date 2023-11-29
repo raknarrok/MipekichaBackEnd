@@ -60,6 +60,7 @@ router.get('/products', async (req, res) => {
     res.render('products', {
       isAdmin: false,
       products: toPayload,
+      cartId:  req.session.user.cart,
     })
   } catch (error) {
     console.error(error)

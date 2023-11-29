@@ -1,8 +1,6 @@
 import { Router } from 'express'
 import passport from 'passport'
 
-
-
 const router = Router()
 
 router.get(
@@ -42,7 +40,9 @@ router.post('/login', passport.authenticate('localPassport', {
         first_name: req.user.first_name,
         last_name: req.user.last_name,
         email: req.user.email,
-        age: req.user.age
+        age: req.user.age,
+        role: req.user.role,
+        cart: req.user.cart
     }
 
     res.redirect('/products')

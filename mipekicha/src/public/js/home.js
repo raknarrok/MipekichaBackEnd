@@ -18,7 +18,7 @@ document.querySelectorAll('.add-button').forEach((button) => {
         const productId = e.target.value
 
         const productToAdd = {
-            cartId: '6544698fca2c55bf750e488f', // TODO: Change this to the actual cartId
+            cartId: '6566aa7eb289c5923d922315', // TODO: Change this to the actual cartId
             productId: productId,
             quantity: 1
         }

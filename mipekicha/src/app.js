@@ -20,8 +20,8 @@ config()
 
 const app = express()
 const PORT = process.env.APP_PORT || 8080
-const productManager = new ProductManager('./products.txt')
-const cartManager = new CartManager('./cart.txt')
+const productManager = new ProductManager()
+const cartManager = new CartManager()
 const messageManager = new MessageManager()
 
 app.use(logger('dev'))

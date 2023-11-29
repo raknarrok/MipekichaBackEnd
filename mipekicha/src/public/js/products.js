@@ -16,9 +16,10 @@ document.querySelectorAll('.add-button').forEach((button) => {
         e.preventDefault()
 
         const productId = e.target.value
+        const cartId = document.getElementById('cartId')
 
         const productToAdd = {
-            cartId: '6544698fca2c55bf750e488f', // TODO: Change this to the actual cartId
+            cartId: cartId.getAttribute('value'), // TODO: Find a beter way to get the cartId
             productId: productId,
             quantity: 1
         }
