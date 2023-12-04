@@ -65,7 +65,7 @@ router.get('/current', async (req, res) => {
         if( current.length === 0){
             res.status(404).send({ error: 'No hay sesiones activas' })
         } else {
-            res.status(200).send({ current })
+           res.status(200).send({ current })
         }
     } catch (error) {
         res.status(500).send({ error: error.message })

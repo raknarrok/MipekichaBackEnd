@@ -9,13 +9,13 @@ import ProductManager from './dao/mongoManager/ProductManager.js'
 import CartManager from './dao/mongoManager/CartManager.js'
 import MessageManager from './dao/mongoManager/MessageManager.js'
 import { Server } from 'socket.io'
-import mongoose from 'mongoose'
 import logger from 'morgan'
 import { config } from 'dotenv'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import passport from 'passport'
 import initializePassport from './config/passport.config.js'
+import MongoSingleton from './database/MongoSingleton.js'
 config()
 
 const app = express()
@@ -23,6 +23,7 @@ const PORT = process.env.APP_PORT || 8080
 const productManager = new ProductManager()
 const cartManager = new CartManager()
 const messageManager = new MessageManager()
+const mongoInstance = MongoSingleton.getInstance()
 
 app.use(logger('dev'))
 app.use(express.json())
@@ -51,7 +52,10 @@ app.use(session({
   }),
   secret: 'secret',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 24 * 60 * 60 * 1000
+  }
 }))
 
 initializePassport()
@@ -123,10 +127,3 @@ io.on('connection', socket => {
   })
 
 })
-
-mongoose.connect(mongoUrl).then(() => {
-  console.log('Conectado a la base de datos')
-})
-  .catch(error => {
-    console.log('Error al conectarse a la base de datos', error)
-  })

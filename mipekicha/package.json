@@ -1,7 +1,7 @@
 {
   "name": "mipekicha",
   "version": "1.0.0",
-  "description": "Practica Integradora Clase 15",
+  "description": "Practica 27 Reestructuración de la aplicación",
   "main": "index.js",
   "type": "module",
   "scripts": {

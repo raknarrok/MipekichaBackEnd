@@ -1,8 +1,8 @@
-import mongose from 'mongoose'
+import mongoose from 'mongoose'
 
 const sessionCollection = 'sessions'
 
-const sessionSchema = new mongose.Schema({
+const sessionSchema = new mongoose.Schema({
     session: {
         cookie: {
             originalMaxAge: Number,
@@ -16,6 +16,6 @@ const sessionSchema = new mongose.Schema({
     }
 })
 
-const sessionModel = mongose.model(sessionCollection, sessionSchema)
+const sessionModel = mongoose.model(sessionCollection, sessionSchema)
 
 export default sessionModel
