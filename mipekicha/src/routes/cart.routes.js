@@ -1,24 +1,27 @@
 import Router from 'express'
 import CartManager from '../dao/mongoManager/CartManager.js'
 import ProductManager from '../dao/mongoManager/ProductManager.js'
+import { getAll } from '../dao/controllers/cart.controller.js'
 
 const route = Router()
 const cartManager = new CartManager()
 const productManager = new ProductManager()
 
 // GET
-route.get('/', async (req, res) => {
-  try {
-    const carts = await cartManager.getAllCarts()
-    if (carts.length === 0) {
-      res.status(404).json({ error: error.message })
-    } else {
-      res.json({ carts })
-    }
-  } catch (error) {
-    res.status(500).json({ error: error.message })
-  }
-})
+// route.get('/', async (req, res) => {
+//   try {
+//     const carts = await cartManager.getAllCarts()
+//     if (carts.length === 0) {
+//       res.status(404).json({ error: error.message })
+//     } else {
+//       res.json({ carts })
+//     }
+//   } catch (error) {
+//     res.status(500).json({ error: error.message })
+//   }
+// })
+
+route.get('/', getAll)
 
 route.get('/:cid', async (req, res) => {
   const cartId = req.params.cid
