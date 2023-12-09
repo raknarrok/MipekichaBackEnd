@@ -9,13 +9,33 @@ class Cart {
         return await CartModel.create(cart)
     }
 
-    // TODO: HOW TO IMPLEMENT THIS?
     addProductToCart = async (cid, pid, data) => {
-        return await CartModel.findByIdAndUpdate(
-            cid,
-            { $pull: { products: { product: pid } } },
-            { new: true }
-        )
+
+        const cart = await CartModel.findById(cid).lean().exec()
+
+        if (!cart) {
+            throw new Error(`The cart with id ${cid} was not found.`)
+        }
+
+        const stringProductId = pid.toString()
+
+        // Verify if the product is already in the cart
+        const isProductInCart = cart.products.some((products) => products.product.toString() === stringProductId)
+
+        if (isProductInCart) {
+            // If is in the cart, update the quantity
+            return await CartModel.updateOne({ _id: cid, 'products.product': stringProductId }, { $inc: { 'products.$.quantity': data.products[0].quantity } })
+        } else {
+            return await CartModel.updateOne(
+                { _id: cid },
+                {
+                    $push: {
+                        products:
+                            { product: pid, quantity: data.products[0].quantity }
+                    }
+                }
+            )
+        }
     }
 
     deleteCart = async (cid) => {
