@@ -1,4 +1,4 @@
-import CartModel from '../models/cart.model.js'
+import CartModel from '../mongo/models/cart.model.js'
 
 class Cart {
 
@@ -58,7 +58,7 @@ class Cart {
     }
 
     getAllCarts = async () => {
-        return await CartModel.find().lean().exec()
+        return await CartModel.find().populate('products.product').lean().exec()
     }
 
     getCartById = async (cid) => {

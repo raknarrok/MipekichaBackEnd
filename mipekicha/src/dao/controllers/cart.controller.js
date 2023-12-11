@@ -5,6 +5,7 @@ import { cartService } from '../../services/index.js'
 export const addCart = async (req, res) => {
 
     const result = await cartService.addCart()
+
     res.send({
         status: 'success',
         payload: result

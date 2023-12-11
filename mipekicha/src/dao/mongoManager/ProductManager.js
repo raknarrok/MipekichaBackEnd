@@ -2,7 +2,7 @@
 Go to cd src
 Run node app.js
 */
-import productModel from '../models/product.model.js'
+import productModel from '../mongo/models/product.model.js'
 
 class ProductManager {
   constructor() {

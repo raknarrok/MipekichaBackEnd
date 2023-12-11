@@ -3,6 +3,7 @@ import MongoSingleton from '../database/MongoSingleton.js'
 config()
 
 export let Cart
+export let Product
 
 console.log(`Persistence with ${ process.env.PERSISTENCE_TYPE }`)
 
@@ -10,9 +11,10 @@ switch (process.env.PERSISTENCE_TYPE) {
     case 'MONGO':
         const mongoInstance = MongoSingleton.getInstance()
         const { default: CartMongo } =  await import ('./mongo/cart.mongo.js')
+        const { default: ProductMongo } = await import ('./mongo/product.mongo.js')
 
         Cart = CartMongo
-        // product
+        Product = ProductMongo
         // user
         // message ??
         // sessions ??

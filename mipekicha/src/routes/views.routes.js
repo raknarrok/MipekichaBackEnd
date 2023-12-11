@@ -1,8 +1,8 @@
 import express from 'express'
 import __dirname from '../utils.js'
 import ProductManager from '../dao/mongoManager/ProductManager.js'
-import productModel from '../dao/models/product.model.js'
-import cartModel from '../dao/models/cart.model.js'
+import productModel from '../dao/mongo/models/product.model.js'
+import cartModel from '../dao/mongo/models/cart.model.js'
 import passport from 'passport'
 
 const productManager = new ProductManager('./products.txt')

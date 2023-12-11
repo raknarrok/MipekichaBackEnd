@@ -1,4 +1,4 @@
-import sessionModel from '../models/sessions.model.js'
+import sessionModel from '../mongo/models/sessions.model.js'
 
 class SessionManager {
     constructor() {

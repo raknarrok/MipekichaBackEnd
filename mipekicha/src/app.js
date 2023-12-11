@@ -66,8 +66,8 @@ app.use(passport.session())
 // Usamos las rutas importadas
 app.use('/', viewsRoutes)
 app.use('/products', viewsRoutes)
-app.use('/api/products', productsRoutes)
-app.use('/api/cart', cartRoutes)
+app.use('/api/products', productsRoutes) // DONE
+app.use('/api/cart', cartRoutes) // DONE
 app.use('/api/session', sessionRoutes)
 
 const httpServer = app.listen(PORT, () => {

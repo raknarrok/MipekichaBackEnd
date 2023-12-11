@@ -1,4 +1,4 @@
-import messageModel from '../models/message.model.js'
+import messageModel from '../mongo/models/message.model.js'
 
 class MessageManager {
     constructor() {
