@@ -16,6 +16,8 @@ import MongoStore from 'connect-mongo'
 import passport from 'passport'
 import initializePassport from './config/passport.config.js'
 import MongoSingleton from './database/MongoSingleton.js'
+import nodemailer from 'nodemailer'
+import twilio from 'twilio'
 config()
 
 const app = express()
@@ -24,6 +26,17 @@ const productManager = new ProductManager()
 const cartManager = new CartManager()
 const messageManager = new MessageManager()
 const mongoInstance = MongoSingleton.getInstance()
+
+// TODO: Implement this in a better way
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
+const transport = nodemailer.createTransport({
+  service: process.env.TWILIO_MAIL_SERVICE,
+  port: 587,
+  auth:{
+    user: process.env.TWILIO_MAIL_ACCOUNT,
+    pass: process.env.TWILIO_MAIL_PASSWORD
+  }
+})
 
 app.use(logger('dev'))
 app.use(express.json())
@@ -62,6 +75,12 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
+app.use((req, res, next) => {
+  if (req.session && req.session.user) {
+    res.locals.user = {...req.session.user}
+  }
+  next()
+})
 
 // Usamos las rutas importadas
 app.use('/', viewsRoutes)
@@ -69,6 +88,35 @@ app.use('/products', viewsRoutes)
 app.use('/api/products', productsRoutes) // DONE
 app.use('/api/cart', cartRoutes) // DONE
 app.use('/api/session', sessionRoutes)
+
+// TODO: Implement this in a better way
+app.get('/mail', async (req, res) => {
+  const result = await transport.sendMail({
+    from: process.env.TWILIO_MAIL_ACCOUNT,
+    to: 'raknarrok@hotmail.com',
+    subject: 'Prueba de mail',
+    html:`
+    <div>
+      <h1>Prueba de mail</h1>
+      <p>Esto es una prueba</p>
+    </div>`,
+    attachments: []
+  })
+  console.log(result)
+  res.send('email sent my friend')
+})
+
+// TODO: Implement this in a better way
+// NOT USED JUST EXAMPLE IMPLEMENTATION
+app.get('/sms', async (req, res) => {
+  const result = await client.messages.create({
+    to: '+528112256837',
+    from: process.env.TWILIO_SMS_NUMBER,
+    body: 'Hola, esto es una prueba de SMS'
+  })
+  console.log(result)
+  res.send('sms sent my friend')
+})
 
 const httpServer = app.listen(PORT, () => {
   console.log('Servidor activo en puerto ' + PORT)

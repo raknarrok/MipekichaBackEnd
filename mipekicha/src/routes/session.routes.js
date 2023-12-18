@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import passport from 'passport'
 import SessionManager from '../dao/mongoManager/SessionManager.js'
+import SessionDTO from '../dao/DTO/session.dto.js'
 
 const sessionManager = new SessionManager()
 const router = Router()
@@ -44,10 +45,12 @@ router.post('/login', passport.authenticate('localPassport', {
         email: req.user.email,
         age: req.user.age,
         role: req.user.role,
-        cart: req.user.cart
+        cart: req.user.cart,
+        isAdmin: req.user.role === 'admin' ? true : false,
+        isAuth: true
     }
 
-    res.redirect('/products')
+    res.redirect('/')
 })
 
 router.get('/logout', (req, res) => {
@@ -60,12 +63,13 @@ router.get('/logout', (req, res) => {
 })
 
 router.get('/current', async (req, res) => {
-    try{
-        const current = await sessionManager.getAllSessions()
-        if( current.length === 0){
+    try {
+        let current = await sessionManager.getAllSessions()
+        if (current.length === 0) {
             res.status(404).send({ error: 'No hay sesiones activas' })
         } else {
-           res.status(200).send({ current })
+            const sessionsData = current.map(session => new SessionDTO(session))
+            res.status(200).send({ sessionsData })
         }
     } catch (error) {
         res.status(500).send({ error: error.message })

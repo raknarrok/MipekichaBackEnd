@@ -16,28 +16,48 @@
                         <div class="line-1"></div>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link hover-underline-animation" href="/live-products">Productos en tiempo real
-                        <div class="line-1"></div>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link hover-underline-animation" href="/products">Productos
-                        <div class="line-1"></div>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link hover-underline-animation" href="/cart">Carrito
-                        <div class="line-1"></div>
-                    </a>
-                </li>
-                <!--
-                <li class="nav-item">
-                    <a class="nav-link hover-underline-animation" href="#">Carritos
-                        <div class="line-1"></div>
-                    </a>
-                </li>
-                -->
+                {{#if user}}
+                    {{#if user.isAdmin}}
+                    <li class="nav-item">
+                        <a class="nav-link hover-underline-animation" href="/live-products">Productos en tiempo real
+                            <div class="line-1"></div>
+                        </a>
+                    </li>
+                    {{else}}
+                    <li class="nav-item">
+                        <a class="nav-link hover-underline-animation" href="/products">Productos
+                            <div class="line-1"></div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link hover-underline-animation" href="/cart">Carrito
+                            <div class="line-1"></div>
+                        </a>
+                    </li>
+                    <!--
+                    <li class="nav-item">
+                        <a class="nav-link hover-underline-animation" href="#">Carritos
+                            <div class="line-1"></div>
+                        </a>
+                    </li>
+                    -->
+                    <li class="nav-item">
+                        <a class="nav-link hover-underline-animation" href="/chat">Chat
+                            <div class="line-1"></div>
+                        </a>
+                    </li>
+                    {{/if}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profile">Perfil
+                            <div class="line-1"></div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api/session/logout">Cerrar Sesión
+                            <div class="line-1"></div>
+                        </a>
+                    </li>
+                {{else}}
                 <li class="nav-item">
                     <a class="nav-link hover-underline-animation" href="/login">Login
                         <div class="line-1"></div>
@@ -53,11 +73,7 @@
                         <div class="line-1"></div>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">Perfil
-                        <div class="line-1"></div>
-                    </a>
-                </li>
+                {{/if}}
             </ul>
         </div>
     </div>

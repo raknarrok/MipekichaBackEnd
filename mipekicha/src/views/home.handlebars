@@ -1,7 +1,14 @@
 <div>
-
     <h1>HOME</h1>
-    <h1> Hola puedes navegar en nuestro NavBar para explorar los productos y carritos</h1>
+    {{#if user}}
+        {{#if user.isAdmin}}
+            <h1> Bienvenido {{user.role}} puedes agregar, remover o actualizar productos</h1>
+        {{else}}
+            <h1> Bienvenido {{user.first_name}} explora nuestra gran variedad de productos</h1>
+        {{/if}}
+    {{else}}
+        <h1> Registrate o inicia session para poder ver nuestros productos </h1>
+    {{/if}}
 </div>
 
 <!-- Socket.io -->

@@ -28,6 +28,13 @@ router.get('/', async (req, res) => {
 router.get('/products', auth, async (req, res) => {
 
   try {
+
+    const userRole = req.session.user.role
+
+    // TODO: Create a better way to handle this
+    if (userRole !== 'user') {
+      return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
+    }
     const limitQuery = getQueryParam(req.query.limit, 5)
     const pageQuery = getQueryParam(req.query.page, 1)
     const sort = req.query.sort || 'asc'
@@ -73,6 +80,11 @@ router.get('/live-products', auth, async (req, res) => {
 
   try {
     const userRole = req.session.user.role
+
+    // TODO: Create a better way to handle this
+    if (userRole !== 'admin') {
+      return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
+    }
     const limitQuery = getQueryParam(req.query.limit, 5)
     const pageQuery = getQueryParam(req.query.page, 1)
     const sort = req.query.sort || 'asc'
@@ -114,8 +126,13 @@ router.get('/live-products', auth, async (req, res) => {
 
 // CHAT
 router.get('/chat', async (req, res) => {
+  const userRole = req.session.user.role
+
+  // TODO: Create a better way to handle this
+  if (userRole !== 'user') {
+    return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
+  }
   res.render('chat', {
-    isAdmin: false,
   })
 })
 
@@ -123,6 +140,12 @@ router.get('/chat', async (req, res) => {
 router.get('/cart', auth, async (req, res) => {
 
   try {
+    const userRole = req.session.user.role
+
+    // TODO: Create a better way to handle this
+    if (userRole !== 'user') {
+      return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
+    }
     const limitQuery = getQueryParam(req.query.limit, 5)
     const pageQuery = getQueryParam(req.query.page, 1)
     const sort = req.query.sort || 'asc'
@@ -173,7 +196,7 @@ router.get('/cart/:cid', async (req, res) => {
 // Login & Logout
 router.get('/login', (req, res) => {
   if (req.session?.user) {
-    return res.redirect('/products')
+    return res.redirect('/')
   }
 
   res.render('login', {})
