@@ -4,6 +4,7 @@ import __dirname from './utils.js'
 import viewsRoutes from './routes/views.routes.js'
 import productsRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
+import ticketRoutes from './routes/ticket.routes.js'
 import sessionRoutes from './routes/session.routes.js'
 import ProductManager from './dao/mongoManager/ProductManager.js'
 import CartManager from './dao/mongoManager/CartManager.js'
@@ -87,6 +88,7 @@ app.use('/', viewsRoutes)
 app.use('/products', viewsRoutes)
 app.use('/api/products', productsRoutes) // DONE
 app.use('/api/cart', cartRoutes) // DONE
+app.use('/api/ticket', ticketRoutes) // DONE
 app.use('/api/session', sessionRoutes)
 
 // TODO: Implement this in a better way
