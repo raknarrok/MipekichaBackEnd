@@ -1,11 +1,9 @@
 import express from 'express'
 import __dirname from '../utils.js'
-import ProductManager from '../dao/mongoManager/ProductManager.js'
+import { cartService } from '../services/index.js'
 import productModel from '../dao/mongo/models/product.model.js'
 import cartModel from '../dao/mongo/models/cart.model.js'
 import passport from 'passport'
-
-const productManager = new ProductManager('./products.txt')
 
 // Aca vamos a crear las rutas que van a servir las vistas, estas al importarlas en app
 // No van a estar precedidas por ningun sufijo
@@ -129,6 +127,7 @@ router.get('/chat', async (req, res) => {
   const userRole = req.session.user.role
 
   // TODO: Create a better way to handle this
+  // TODO: Add try catch
   if (userRole !== 'user') {
     return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
   }
@@ -183,18 +182,54 @@ router.get('/cart', auth, async (req, res) => {
   }
 })
 
-router.get('/cart/:cid', async (req, res) => {
+router.get('/cart/:cid', auth, async (req, res) => {
 
-  const cartId = req.params.cid
-  const cartDetailPopulated = await cartModel.findOne({ _id: cartId }).populate('products.product').lean().exec()
+  try {
+    const userRole = req.session.user.role
 
-  res.render('cartdetails', {
-    cart: cartDetailPopulated
-  })
+    // TODO: Create a better way to handle this
+    if (userRole !== 'user') {
+      return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
+    }
+    const cartId = req.params.cid
+    const cartDetailPopulated = await cartService.retrieveCartById(cartId)
+
+    res.render('cartdetails', {
+      cart: cartDetailPopulated
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ status: 'Error', error: 'An error occurred while getting carts' })
+  }
+})
+
+router.get('/cart/:cid/purchase', auth, async (req, res) => {
+
+  try {
+    const userRole = req.session.user.role
+
+    if (userRole !== 'user') {
+      return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
+    }
+
+    const cartId = req.params.cid
+    const cartDetailPopulated = await cartService.retrieveCartById(cartId)
+
+    // TODO: Proceed with purchase logic
+
+    res.render('purchase', {
+      cart: cartDetailPopulated
+    })
+
+  } catch (error) {
+    console.error(error)
+    res.status(500).send({ status: 'Error', error: 'An error occurred while getting details from ticket/carts' })
+  }
 })
 
 // Login & Logout
 router.get('/login', (req, res) => {
+  // TODO: Add try catch
   if (req.session?.user) {
     return res.redirect('/')
   }
@@ -203,6 +238,7 @@ router.get('/login', (req, res) => {
 })
 
 router.get('/singup', (req, res) => {
+  // TODO: Add try catch
   if (req.session?.user) {
     return res.redirect('/profile')
   }
@@ -210,6 +246,7 @@ router.get('/singup', (req, res) => {
 })
 
 router.get('/profile', auth, (req, res) => {
+  // TODO: Add try catch
   const user = req.session.user
   return res.render('profile', user)
 })
@@ -223,6 +260,7 @@ router.get(
 router.get(
   '/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }),
   async (req, res) => {
+    // TODO: Add try catch
     console.log('Callback', req.user)
     req.session.user = req.user
 
@@ -231,6 +269,7 @@ router.get(
   })
 
 router.get('/logout', async (req, res) => {
+  // TODO: Add try catch
   req.session.destroy(err => {
     if (err) return res.send('Logout error')
 
@@ -239,12 +278,14 @@ router.get('/logout', async (req, res) => {
 })
 
 function auth(req, res, next) {
+  // TODO: Add try catch
   if (req.session.user) return next()
   res.status(401)
   return res.redirect('/login')
 }
 
 function getQueryParam(param, defaultValue) {
+  // TODO: Add try catch
   return parseInt(param) || defaultValue
 }
 
