@@ -1,5 +1,5 @@
 import { productService } from '../../services/index.js'
-
+// TODO: Implement Try/Catch
 export const addProduct = async (req, res) => {
 
     const data = req.body

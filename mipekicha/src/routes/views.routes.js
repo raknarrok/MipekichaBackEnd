@@ -1,6 +1,6 @@
 import express from 'express'
 import __dirname from '../utils.js'
-import { cartService } from '../services/index.js'
+import { cartService, productService, ticketService } from '../services/index.js'
 import productModel from '../dao/mongo/models/product.model.js'
 import cartModel from '../dao/mongo/models/cart.model.js'
 import passport from 'passport'
@@ -213,12 +213,46 @@ router.get('/cart/:cid/purchase', auth, async (req, res) => {
     }
 
     const cartId = req.params.cid
-    const cartDetailPopulated = await cartService.retrieveCartById(cartId)
+    let cartDetailPopulated = await cartService.retrieveCartById(cartId)
 
-    // TODO: Proceed with purchase logic
+    if (cartDetailPopulated.products.length === 0) {
+      return res.status(400).send({ status: 'Error', error: 'You cannot purchase an empty cart' })
+    }
+
+    // 1.- Verify stock availability
+    let totalAmount = 0
+    for (const product of cartDetailPopulated.products) {
+
+      let productDetail = await productService.retrieveProductById(product.product)
+
+      if (productDetail.stock < product.quantity) {
+        continue
+      }
+
+      // 2.- Update the product stock
+      const newStock = productDetail.stock - product.quantity
+      await productService.updateProduct(product.product, { stock: newStock })
+      totalAmount += productDetail.price * product.quantity
+
+      await cartService.removeProduct(cartId, product.product)
+    }
+
+    if (totalAmount === 0) {
+      return res.status(400).send({ status: 'Error', error: 'There is not enough stock to complete the purchase' })
+    }
+
+    cartDetailPopulated = await cartService.retrieveCartById(cartId)
+
+    const ticketCreated = await ticketService.addTicket({
+      email: req.session.user.email,
+      total: totalAmount
+    })
+
+    const ticketDetails = await ticketService.retrieveTicketById(ticketCreated._id)
 
     res.render('purchase', {
-      cart: cartDetailPopulated
+      cart: cartDetailPopulated,
+      ticket: ticketDetails
     })
 
   } catch (error) {
