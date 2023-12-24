@@ -1,4 +1,5 @@
 import ProductModel from '../mongo/models/product.model.js'
+import { generateProduct } from '../../utils.js'
 
 class Product {
     // CRUD - Create Read Update Delete
@@ -50,6 +51,25 @@ class Product {
         return product
     }
 
+    createMockingProducts = async () => {
+
+        // Product Array
+        let productsAdded = []
+
+        for (let indexCounter = 0; indexCounter < 10; indexCounter++) {
+            let product = generateProduct()
+            const isCodeInUse = await ProductModel.exists({ code: product.code })
+            if (isCodeInUse) {
+                continue
+            }
+
+            await ProductModel.create(product)
+            productsAdded.push(product)
+        }
+
+        return productsAdded
+    }
+
     updateProduct = async (pid, data) => {
         if (!data) {
             throw new Error(
@@ -85,7 +105,7 @@ class Product {
     }
 
     getAllProducts = async () => {
-        return  await ProductModel.find().lean().exec()
+        return await ProductModel.find().lean().exec()
     }
 
     getProductById = async (pid) => {

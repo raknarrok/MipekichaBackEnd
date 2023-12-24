@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { addProduct, updateProduct, removeProductById, removeProductByCode, retrieveAllProducts, retrieveProductById, retrieveProductByCode } from '../dao/controllers/product.controller.js'
+import { addProduct, updateProduct, removeProductById, removeProductByCode, retrieveAllProducts, retrieveProductById, retrieveProductByCode, addMockingProducts } from '../dao/controllers/product.controller.js'
 
 const route = Router()
 
@@ -13,5 +13,6 @@ route.delete('/code/:pcode', removeProductByCode)
 route.get('/', retrieveAllProducts)
 route.get('/:pid', retrieveProductById)
 route.get('/code/:pcode', retrieveProductByCode)
+route.post('/mockingproducts', addMockingProducts)
 
 export default route

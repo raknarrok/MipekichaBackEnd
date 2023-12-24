@@ -11,6 +11,16 @@ export const addProduct = async (req, res) => {
     })
 }
 
+export const addMockingProducts = async (req, res) => {
+
+    const result = await productService.addMockingProducts()
+
+    res.send({
+        status: 'success',
+        payload: result
+    })
+}
+
 export const updateProduct = async (req, res) => {
 
     const pid = req.params.pid

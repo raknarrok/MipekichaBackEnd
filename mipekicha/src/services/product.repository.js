@@ -7,6 +7,7 @@ class ProductRepository {
     }
 
     addProduct = async (data) => { return await this.dao.createProduct(data) }
+    addMockingProducts = async () => { return await this.dao.createMockingProducts() }
     updateProduct = async (pid, data) => { return await this.dao.updateProduct(pid, data) }
     removeProductById = async (pid) => { return await this.dao.deleteProductById(pid) }
     removeProductByCode = async (pcode) => { return await this.dao.deleteProductByCode(pcode) }
