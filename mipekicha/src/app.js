@@ -19,6 +19,7 @@ import initializePassport from './config/passport.config.js'
 import MongoSingleton from './database/MongoSingleton.js'
 import nodemailer from 'nodemailer'
 import twilio from 'twilio'
+import errorHandler from './middlewares/error.js'
 config()
 
 const app = express()
@@ -90,6 +91,7 @@ app.use('/api/products', productsRoutes) // DONE
 app.use('/api/cart', cartRoutes) // DONE
 app.use('/api/ticket', ticketRoutes) // DONE
 app.use('/api/session', sessionRoutes)
+app.use(errorHandler)
 
 // TODO: Implement this in a better way
 app.get('/mail', async (req, res) => {

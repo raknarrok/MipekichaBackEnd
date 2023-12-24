@@ -1,5 +1,8 @@
 import ProductModel from '../mongo/models/product.model.js'
 import { generateProduct } from '../../utils.js'
+import CustomError from '../../services/errors/custom_errors.js'
+import { generateProductErrorInfo } from '../../services/errors/info.js'
+import EErrors from '../../services/errors/enums.js'
 
 class Product {
     // CRUD - Create Read Update Delete
@@ -11,38 +14,40 @@ class Product {
         code,
         stock,
         category,
-        statusItem,
+        statusItem = true, // set default value here
     }) => {
-        // First Validate if we have all the required fields
-        if (
-            !title ||
-            !description ||
-            !price ||
-            !code ||
-            stock === undefined ||
-            !category ||
-            !statusItem
-        ) {
-            throw new Error(
-                'BAD REQUEST: Hey!!! You are missing one or more required fields. Please provide values for title, description, price, code, stock, category or statusItem to continue.'
-            )
-        }
-
         const product = {
             title,
             description,
             price,
             thumbnails,
-            code: code,
+            code,
             stock,
             category,
-            statusItem: statusItem || true,
+            statusItem,
         }
 
-        const isCodeInUse = await ProductModel.exists({ code: code })
+        if (
+            !product?.title ||
+            !product?.description ||
+            !product?.price ||
+            !product?.code ||
+            product?.stock === undefined ||
+            !product?.category ||
+            !product?.statusItem
+        ) {
+            CustomError.createError({
+                name: 'Error',
+                cause: generateProductErrorInfo(product), // pass product directly
+                message: 'Error trying to create a new product.',
+                code: EErrors.INVALID_TYPES_ERROR
+            })
+        }
+
+        const isCodeInUse = await ProductModel.exists({ code: product.code })
         if (isCodeInUse) {
             throw new Error(
-                `The code ${code} is already in use Code must be unique.`
+                `The code ${product.code} is already in use. Code must be unique.`
             )
         }
 
