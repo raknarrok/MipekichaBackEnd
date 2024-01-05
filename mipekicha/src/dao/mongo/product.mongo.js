@@ -16,6 +16,7 @@ class Product {
         category,
         statusItem = true, // set default value here
     }) => {
+        try {
         const product = {
             title,
             description,
@@ -26,34 +27,37 @@ class Product {
             category,
             statusItem,
         }
+            if (
+                !product?.title ||
+                !product?.description ||
+                !product?.price ||
+                !product?.code ||
+                product?.stock === undefined ||
+                !product?.category ||
+                !product?.statusItem
+            ) {
+                CustomError.createError({
+                    name: 'Error',
+                    cause: generateProductErrorInfo(product), // pass product directly
+                    message: 'Error trying to create a new product.',
+                    code: EErrors.INVALID_TYPES_ERROR
+                })
+            }
 
-        if (
-            !product?.title ||
-            !product?.description ||
-            !product?.price ||
-            !product?.code ||
-            product?.stock === undefined ||
-            !product?.category ||
-            !product?.statusItem
-        ) {
-            CustomError.createError({
-                name: 'Error',
-                cause: generateProductErrorInfo(product), // pass product directly
-                message: 'Error trying to create a new product.',
-                code: EErrors.INVALID_TYPES_ERROR
-            })
+            const isCodeInUse = await ProductModel.exists({ code: product.code })
+            if (isCodeInUse) {
+                throw new Error(
+                    `The code ${product.code} is already in use. Code must be unique.`
+                )
+            }
+
+            await ProductModel.create(product)
+
+            return product
+        }  catch (error) {
+            console.error(error)
+            throw error
         }
-
-        const isCodeInUse = await ProductModel.exists({ code: product.code })
-        if (isCodeInUse) {
-            throw new Error(
-                `The code ${product.code} is already in use. Code must be unique.`
-            )
-        }
-
-        await ProductModel.create(product)
-
-        return product
     }
 
     createMockingProducts = async () => {
