@@ -6,6 +6,7 @@ import productsRoutes from './routes/product.routes.js'
 import cartRoutes from './routes/cart.routes.js'
 import ticketRoutes from './routes/ticket.routes.js'
 import sessionRoutes from './routes/session.routes.js'
+import loggerRoutes from './routes/logger.routes.js'
 import ProductManager from './dao/mongoManager/ProductManager.js'
 import CartManager from './dao/mongoManager/CartManager.js'
 import MessageManager from './dao/mongoManager/MessageManager.js'
@@ -20,6 +21,7 @@ import MongoSingleton from './database/MongoSingleton.js'
 import nodemailer from 'nodemailer'
 import twilio from 'twilio'
 import errorHandler from './middlewares/error.js'
+import { addLogger } from './middlewares/logger.js'
 config()
 
 const app = express()
@@ -87,11 +89,15 @@ app.use((req, res, next) => {
 // Usamos las rutas importadas
 app.use('/', viewsRoutes)
 app.use('/products', viewsRoutes)
-app.use('/api/products', productsRoutes) // DONE
-app.use('/api/cart', cartRoutes) // DONE
-app.use('/api/ticket', ticketRoutes) // DONE
+app.use('/api/products', productsRoutes)
+app.use('/api/cart', cartRoutes)
+app.use('/api/ticket', ticketRoutes)
 app.use('/api/session', sessionRoutes)
+app.use('/api/loggerTest', loggerRoutes)
+app.use(addLogger)
 app.use(errorHandler)
+
+console.log('Current Envirtonment', process.env.APP_ENV) // REMOVE THIS
 
 // TODO: Implement this in a better way
 app.get('/mail', async (req, res) => {

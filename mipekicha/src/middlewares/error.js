@@ -1,7 +1,9 @@
 import  EErrors from '../services/errors/enums.js'
+import { logger } from './logger.js'
 
 export default (error, req, res, next) => {
 
+    logger.error(error)
     console.log(error)
 
     switch (error.code) {
