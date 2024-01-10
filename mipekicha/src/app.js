@@ -11,7 +11,7 @@ import ProductManager from './dao/mongoManager/ProductManager.js'
 import CartManager from './dao/mongoManager/CartManager.js'
 import MessageManager from './dao/mongoManager/MessageManager.js'
 import { Server } from 'socket.io'
-import logger from 'morgan'
+import loggerMorgan from 'morgan'
 import { config } from 'dotenv'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
@@ -21,7 +21,7 @@ import MongoSingleton from './database/MongoSingleton.js'
 import nodemailer from 'nodemailer'
 import twilio from 'twilio'
 import errorHandler from './middlewares/error.js'
-import { addLogger } from './middlewares/logger.js'
+import { addLogger, logger } from './middlewares/logger.js'
 config()
 
 const app = express()
@@ -42,7 +42,7 @@ const transport = nodemailer.createTransport({
   }
 })
 
-app.use(logger('dev'))
+app.use(loggerMorgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
@@ -97,7 +97,7 @@ app.use('/api/loggerTest', loggerRoutes)
 app.use(addLogger)
 app.use(errorHandler)
 
-console.log('Current Envirtonment', process.env.APP_ENV) // REMOVE THIS
+logger.debug(`Current Environment ${process.env.APP_ENV}`)
 
 // TODO: Implement this in a better way
 app.get('/mail', async (req, res) => {
@@ -112,7 +112,7 @@ app.get('/mail', async (req, res) => {
     </div>`,
     attachments: []
   })
-  console.log(result)
+  logger.debug(result)
   res.send('email sent my friend')
 })
 
@@ -124,20 +124,20 @@ app.get('/sms', async (req, res) => {
     from: process.env.TWILIO_SMS_NUMBER,
     body: 'Hola, esto es una prueba de SMS'
   })
-  console.log(result)
+  logger.debug(result)
   res.send('sms sent my friend')
 })
 
 const httpServer = app.listen(PORT, () => {
-  console.log('Servidor activo en puerto ' + PORT)
+  logger.debug(`Servidor activo en puerto ${PORT}`)
 })
 
 //Socket
 const io = new Server(httpServer)
 io.on('connection', socket => {
-  console.log('Cliente conectado')
+  logger.debug('Cliente conectado')
   socket.on('disconnect', () => {
-    console.log('Un usuario se desconectó')
+    logger.debug('Cliente desconectado')
   })
 
   // Aca capturamos el emit que hicimos en el frontend, algo asi como que

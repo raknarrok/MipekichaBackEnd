@@ -19,7 +19,6 @@ class Ticket {
             counter++
         } while (await TicketModel.exists({ code: uniqueCode }) || counter <= 3)
 
-        console.log('Total amount to be added',data.total)
         const ticket = {
             code: uniqueCode.toString(),
             createdAt: new Date(),

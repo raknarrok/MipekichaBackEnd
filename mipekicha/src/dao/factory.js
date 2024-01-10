@@ -1,12 +1,13 @@
 import { config } from 'dotenv'
 import MongoSingleton from '../database/MongoSingleton.js'
+import { logger } from '../middlewares/logger.js'
 config()
 
 export let Cart
 export let Product
 export let Ticket
 
-console.log(`Persistence with ${ process.env.PERSISTENCE_TYPE }`)
+logger.debug(`Persistence with ${ process.env.PERSISTENCE_TYPE }`)
 
 switch (process.env.PERSISTENCE_TYPE) {
     case 'MONGO':
@@ -23,13 +24,13 @@ switch (process.env.PERSISTENCE_TYPE) {
         // sessions ??
         break
     case 'FILE':
-        console.log('TODO: FILE')
+        logger.debug('TODO: FILE')
         break
     case 'MYSQL':
-        console.log('TODO: POSTGRESQL')
+        logger.debug('TODO: POSTGRESQL')
         break
     case 'POSTGRESQL':
-        console.log('TODO: POSTGRESQL')
+        logger.debug('TODO: POSTGRESQL')
         break
     default:
         throw new Error('No persistence selected')

@@ -17,16 +17,16 @@ class Product {
         statusItem = true, // set default value here
     }) => {
         try {
-        const product = {
-            title,
-            description,
-            price,
-            thumbnails,
-            code,
-            stock,
-            category,
-            statusItem,
-        }
+            const product = {
+                title,
+                description,
+                price,
+                thumbnails,
+                code,
+                stock,
+                category,
+                statusItem,
+            }
             if (
                 !product?.title ||
                 !product?.description ||
@@ -54,7 +54,7 @@ class Product {
             await ProductModel.create(product)
 
             return product
-        }  catch (error) {
+        } catch (error) {
             console.error(error)
             throw error
         }
@@ -87,9 +87,7 @@ class Product {
         }
 
         const code = data.code
-        console.log('Code to be validate', code)
         const isCodeInUse = await ProductModel.exists({ code: code })
-        console.log('isCodeInUse', isCodeInUse)
         if (isCodeInUse) {
             throw new Error(
                 `The code ${code} is already in use Code must be unique.`

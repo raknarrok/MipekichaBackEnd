@@ -2,6 +2,7 @@ import { Router } from 'express'
 import passport from 'passport'
 import SessionManager from '../dao/mongoManager/SessionManager.js'
 import SessionDTO from '../dao/DTO/session.dto.js'
+import { logger } from '../middlewares/logger.js'
 
 const sessionManager = new SessionManager()
 const router = Router()
@@ -15,10 +16,10 @@ router.get(
 router.get(
     '/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }),
     async (req, res) => {
-        console.log('Callback', req.user)
+        logger.debug('Callback', req.user)
         req.session.user = req.user
 
-        console.log(req.session)
+        logger.debug(req.session)
         res.redirect('/')
     })
 
@@ -56,7 +57,7 @@ router.post('/login', passport.authenticate('localPassport', {
 router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
-            console.log(err);
+            logger.error(err);
             res.status(500).render('errors/base', { error: err })
         } else res.redirect('/login')
     })
@@ -72,6 +73,7 @@ router.get('/current', async (req, res) => {
             res.status(200).send({ sessionsData })
         }
     } catch (error) {
+        logger.error(error)
         res.status(500).send({ error: error.message })
     }
 })

@@ -3,6 +3,7 @@ Go to cd src
 Run node app.js
 */
 import fs from 'fs'
+import { logger } from '../../middlewares/logger.js'
 
 class CartManagerFileSystem {
   constructor (filePath) {
@@ -15,7 +16,6 @@ class CartManagerFileSystem {
     const maxId = this.carts.reduce((max, cart) => (cart.id > max ? cart.id : max), 0)
     this.cartIdCounter = maxId + 1
     const fileContent = this.checkFile()
-    console.log(fileContent)
 
     // Create New Cart
     const cart = {
@@ -94,7 +94,7 @@ class CartManagerFileSystem {
       }
       return JSON.parse(fileContent) || []
     } catch (error) {
-      console.error(error)
+      logger.error(error)
       return []
     }
   }

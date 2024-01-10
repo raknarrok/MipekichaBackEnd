@@ -4,6 +4,7 @@ import GitHubStrategy from 'passport-github2'
 import userModel from '../dao/mongo/models/user.model.js'
 import { createHash, isValidPassword } from '../utils.js'
 import { config } from 'dotenv'
+import { logger } from '../middlewares/logger.js'
 config()
 
 const localStrategy = local.Strategy
@@ -13,12 +14,12 @@ const initializePassport = () => {
         passReqToCallback: true,
         usernameField: 'email'
     }, async (req, username, password, done) => {
-        console.log('My Body ->', req.body)
+        logger.debug(`My Body -> ${req.body}`)
         const { first_name, last_name, email, age } = req.body
         try {
             const user = await userModel.findOne({ email: username })
             if (user) {
-                console.log('User Already Exist')
+                logger.info('User Already Exist')
                 return done(null, false)
             }
 
@@ -43,7 +44,7 @@ const initializePassport = () => {
         try {
             const user = await userModel.findOne({ email: username })
             if (!user) {
-                console.log('User does not exists')
+                logger.info('User does not exists')
                 return done(null, false)
             }
 
@@ -63,12 +64,12 @@ const initializePassport = () => {
 
         },
         async (accessToken, refreshToken, profile, done) => {
-            console.log(profile)
+            logger.debug(profile)
 
             try {
                 const user = await userModel.findOne({ email: profile._json.email })
                 if (user) {
-                    console.log('User already exists')
+                    logger.info('User already exists')
                     return done(null, user)
                 }
 

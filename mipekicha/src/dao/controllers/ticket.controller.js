@@ -5,8 +5,6 @@ export const addTicket = async (req, res) => {
     const data = req.body
     const result = await ticketService.addTicket(data)
 
-    console.log('Creating ticket from Controller')
-
     res.send({
         status: 'success',
         payload: result
