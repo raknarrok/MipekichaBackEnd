@@ -7,6 +7,7 @@ import cartRoutes from './routes/cart.routes.js'
 import ticketRoutes from './routes/ticket.routes.js'
 import sessionRoutes from './routes/session.routes.js'
 import loggerRoutes from './routes/logger.routes.js'
+import mailRoutes from './routes/mailTracker.routes.js'
 import ProductManager from './dao/mongoManager/ProductManager.js'
 import CartManager from './dao/mongoManager/CartManager.js'
 import MessageManager from './dao/mongoManager/MessageManager.js'
@@ -89,21 +90,23 @@ app.use((req, res, next) => {
 // Usamos las rutas importadas
 app.use('/', viewsRoutes)
 app.use('/products', viewsRoutes)
+app.use('/token', viewsRoutes)
 app.use('/api/products', productsRoutes)
 app.use('/api/cart', cartRoutes)
 app.use('/api/ticket', ticketRoutes)
 app.use('/api/session', sessionRoutes)
 app.use('/api/loggerTest', loggerRoutes)
+app.use('/api/mail', mailRoutes)
 app.use(addLogger)
 app.use(errorHandler)
 
 logger.debug(`Current Environment ${process.env.APP_ENV}`)
 
 // TODO: Implement this in a better way
-app.get('/mail', async (req, res) => {
+app.get('/api/mailv2', async (req, res) => {
   const result = await transport.sendMail({
     from: process.env.TWILIO_MAIL_ACCOUNT,
-    to: 'raknarrok@hotmail.com',
+    to: 'marketing@mipekicha.com',
     subject: 'Prueba de mail',
     html:`
     <div>
@@ -183,5 +186,4 @@ io.on('connection', socket => {
     cartManager.removeAllProducts(clearId)
     io.emit('cart-cleared', clearId)
   })
-
 })

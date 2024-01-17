@@ -311,6 +311,24 @@ router.get('/logout', async (req, res) => {
   })
 })
 
+router.get('/restore-password', (req, res) => {
+
+  if (req.session?.user) {
+    return res.redirect('/profile')
+  }
+
+  res.render('restore-password', {})
+})
+
+router.get('/token', (req, res) => {
+  res.render('token')
+})
+
+router.get('/update-password', (req, res) => {
+  console.log('We are on views section')
+  res.render('update-password')
+})
+
 function auth(req, res, next) {
   // TODO: Add try catch
   if (req.session.user) return next()

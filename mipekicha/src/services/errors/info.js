@@ -24,3 +24,12 @@ export const generateProductErrorInfo = (product) => {
     - StatusItem: ${product?.statusItem}
     `
 }
+
+export const generateMailTrackerErrorInfo = (mailTracker) => {
+
+    return `
+        Some values are missing or invalid
+        - Email: ${mailTracker?.to}
+        - Subject: ${mailTracker?.subject}
+        `
+}

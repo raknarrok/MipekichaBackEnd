@@ -6,6 +6,7 @@ config()
 export let Cart
 export let Product
 export let Ticket
+export let MailTracker
 
 logger.debug(`Persistence with ${ process.env.PERSISTENCE_TYPE }`)
 
@@ -15,10 +16,12 @@ switch (process.env.PERSISTENCE_TYPE) {
         const { default: CartMongo } =  await import ('./mongo/cart.mongo.js')
         const { default: ProductMongo } = await import ('./mongo/product.mongo.js')
         const { default: TicketMongo } = await import ('./mongo/ticket.mongo.js')
+        const { default: MailTrackerMongo} = await import ('./mongo/mailTracker.mongo.js')
 
         Cart = CartMongo
         Product = ProductMongo
         Ticket = TicketMongo
+        MailTracker = MailTrackerMongo
         // user
         // message ??
         // sessions ??
