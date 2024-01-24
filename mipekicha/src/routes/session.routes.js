@@ -3,6 +3,7 @@ import passport from 'passport'
 import SessionManager from '../dao/mongoManager/SessionManager.js'
 import SessionDTO from '../dao/DTO/session.dto.js'
 import { logger } from '../middlewares/logger.js'
+import { verifyToken, verifyPassword } from '../dao/controllers/mailTracker.controller.js'
 
 const sessionManager = new SessionManager()
 const router = Router()
@@ -72,6 +73,40 @@ router.get('/current', async (req, res) => {
             const sessionsData = current.map(session => new SessionDTO(session))
             res.status(200).send({ sessionsData })
         }
+    } catch (error) {
+        logger.error(error)
+        res.status(500).send({ error: error.message })
+    }
+})
+
+router.post('/restore', async (req, res) => {
+    try {
+        const { token, password, confirmPassword } = req.body
+
+        if (password !== confirmPassword) {
+            res.status(400).send({ error: 'Passwords do not match' })
+        }
+
+        // Verify if token is valid
+        const validateToken = await verifyToken(token)
+
+        if (validateToken === 'Invalid Token') {
+            res.status(400).send({ error: 'Invalid Token' })
+        }
+
+        // Verify if the password is the same as the one in the database
+        const userDetails = {
+            email: validateToken,
+            password: password
+        }
+
+        const isValid = await verifyPassword(userDetails)
+
+        if (!isValid) {
+            res.status(400).send({ error: 'Passwords are the same' })
+        }
+
+        res.redirect('/login')
     } catch (error) {
         logger.error(error)
         res.status(500).send({ error: error.message })

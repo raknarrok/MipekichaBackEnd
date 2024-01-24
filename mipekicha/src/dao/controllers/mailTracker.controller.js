@@ -8,4 +8,11 @@ export const addMailTracker = async (req, res) => {
 
 export const verifyToken = async (req, res) => {
     // TODO: Implement Try/Catch
+    const result = await mailTrackerService.verifyToken(req)
+    return result
+}
+
+export const verifyPassword = async (req, res) => {
+    const result = await mailTrackerService.verifyPassword(req)
+    return result
 }

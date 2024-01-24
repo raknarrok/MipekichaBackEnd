@@ -23,6 +23,8 @@ import nodemailer from 'nodemailer'
 import twilio from 'twilio'
 import errorHandler from './middlewares/error.js'
 import { addLogger, logger } from './middlewares/logger.js'
+import swaggerJSDoc from 'swagger-jsdoc'
+import swaggerUIExpress from 'swagger-ui-express'
 config()
 
 const app = express()
@@ -31,6 +33,20 @@ const productManager = new ProductManager()
 const cartManager = new CartManager()
 const messageManager = new MessageManager()
 const mongoInstance = MongoSingleton.getInstance()
+const swaggetOptions = {
+  definition: {
+    opnenapi: '3.0.0',
+    info: {
+      title: 'Mipekicha API',
+      description: 'API para el proyecto final de Coderhouse',
+      version: '1.0.0'
+    }
+  },
+  apis: [`${__dirname}/../docs/**/*.yml`]
+}
+
+const specs = swaggerJSDoc(swaggetOptions)
+app.use('/docs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs))
 
 // TODO: Implement this in a better way
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
@@ -101,23 +117,6 @@ app.use(addLogger)
 app.use(errorHandler)
 
 logger.debug(`Current Environment ${process.env.APP_ENV}`)
-
-// TODO: Implement this in a better way
-app.get('/api/mailv2', async (req, res) => {
-  const result = await transport.sendMail({
-    from: process.env.TWILIO_MAIL_ACCOUNT,
-    to: 'marketing@mipekicha.com',
-    subject: 'Prueba de mail',
-    html:`
-    <div>
-      <h1>Prueba de mail</h1>
-      <p>Esto es una prueba</p>
-    </div>`,
-    attachments: []
-  })
-  logger.debug(result)
-  res.send('email sent my friend')
-})
 
 // TODO: Implement this in a better way
 // NOT USED JUST EXAMPLE IMPLEMENTATION

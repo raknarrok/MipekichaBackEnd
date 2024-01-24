@@ -1,7 +1,9 @@
 <h1>Recuperar Contraseña - Token</h1>
 
-<form action="/api/mail/restore" method="POST" id="restore-password-form"></form>
+<form action="/api/session/restore" method="POST" id="restore-password-form">
 <p>Ingresa el codigo que enviamos a tu correo para continuar</p>
-    Codigo: <input type="text" name="token" id="token"><br>
-    <input type="submit" value="Continuar" id="token">
+    Codigo de autorizacion: <input type="text" name="token" id="token"><br>
+    Nuevo Password: <input type="password" name="password" id="password"><br>
+    Confirmar Password: <input type="password" name="confirmPassword" id="confirmPassword"><br>
+    <input type="submit" value="Continuar" id="submitToken">
 </form>
