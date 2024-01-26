@@ -4,7 +4,7 @@ import { addCart, addProduct, getAll, getCartById, removeProduct, removeAllProdu
 const route = Router()
 
 route.post('/', addCart)
-route.post('/:cid/product/:pid', addProduct)
+route.put('/:cid/product/:pid', addProduct)
 route.delete('/:cid/products/:pid', removeProduct)
 route.delete('/:cid', removeAllProducts)
 route.get('/', getAll)

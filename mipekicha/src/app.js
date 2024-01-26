@@ -35,18 +35,17 @@ const messageManager = new MessageManager()
 const mongoInstance = MongoSingleton.getInstance()
 const swaggetOptions = {
   definition: {
-    opnenapi: '3.0.0',
+    opnenapi: '3.0.1',
     info: {
       title: 'Mipekicha API',
-      description: 'API para el proyecto final de Coderhouse',
-      version: '1.0.0'
+      description: 'API para el proyecto final de Coderhouse'
     }
   },
-  apis: [`${__dirname}/../docs/**/*.yml`]
+  apis: [`${__dirname}/docs/**/*.yml`]
 }
 
 const specs = swaggerJSDoc(swaggetOptions)
-app.use('/docs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs))
+app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs))
 
 // TODO: Implement this in a better way
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
