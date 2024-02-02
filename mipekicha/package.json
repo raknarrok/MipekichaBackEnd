@@ -11,7 +11,7 @@
     "dev": "npm-run-all --parallel sass-watch nodemon-watch",
     "dev2": "nodemon src/app.js",
     "test-coverage": "jest --coverage",
-    "test": "jest --verbose"
+    "test": "npx mocha src/test/*.js"
   },
   "author": "",
   "license": "ISC",
@@ -42,7 +42,9 @@
     "twilio": "^4.19.3",
     "winston": "^3.11.0"
   },
-  "jest": {
-    "testEnvironment": "node"
+  "devDependencies": {
+    "chai": "^5.0.3",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.4"
   }
 }

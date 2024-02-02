@@ -83,15 +83,19 @@ router.post('/restore', async (req, res) => {
     try {
         const { token, password, confirmPassword } = req.body
 
+        console.log('Curret body', req.body)
+
         if (password !== confirmPassword) {
-            res.status(400).send({ error: 'Passwords do not match' })
+            return res.status(400).send({ error: 'Passwords do not match' })
         }
+
+        console.log('After compare passwords')
 
         // Verify if token is valid
         const validateToken = await verifyToken(token)
 
         if (validateToken === 'Invalid Token') {
-            res.status(400).send({ error: 'Invalid Token' })
+            return res.status(400).send({ error: 'Invalid Token' })
         }
 
         // Verify if the password is the same as the one in the database
