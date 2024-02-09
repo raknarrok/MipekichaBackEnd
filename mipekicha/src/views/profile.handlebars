@@ -1,10 +1,69 @@
-<h1>Profile</h1>
+<section class="heroIndexScreen">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-xl-10">
+                <div class="card" style="border-radius: 1rem;">
+                    <div class="row g-0">
+                        <div
+                            class="col-md-6 col-lg-7 d-flex align-items-center">
+                            <div class="card-body p-4 p-lg-5 text-black">
 
-First Name: {{first_name}}<br>
-Last Name: {{last_name}}<br>
-Age: {{age}}<br>
-Email: {{email}}<br>
-Role: {{role}}<br>
-CartId: {{cart}}<br>
+                                <form
+                                    id="profile-form">
 
-<a href="/api/session/logout">Salir</a>
+                                    <div
+                                        class="d-flex align-items-center mb-3 pb-1">
+                                        <i class="fas fa-cubes fa-2x me-3"
+                                            style="color: #ff6219;"></i>
+                                        <span
+                                            class="h1 fw-bold mb-0">Mi Cuenta</span>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <label class="form-label"
+                                            for="firstName">Nombres:
+                                            <b>{{first_name}}</b></label>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <label class="form-label"
+                                            for="lastName">Apellidos:
+                                            <b>{{last_name}}</b></label>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <label class="form-label"
+                                            for="age">Edad: <b>{{age}}</b></label>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <label class="form-label"
+                                            for="email">Correo:
+                                            <b>{{email}}</b></label>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <label class="form-label"
+                                            for="email">Cuenta: <b>{{role}}</b></label>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <label class="form-label"
+                                            for="cart">Carrito: <b>{{cart}}</b></label>
+                                    </div>
+
+                                    <div class="pt-1 mb-4">
+                                        <a
+                                            class="btn btn-dark btn-lg btn-block"
+                                            id="signOff" href="/api/session/logout">Cerrar Sesion</a>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

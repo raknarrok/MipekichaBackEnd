@@ -1,9 +1,84 @@
-<h1>Recuperar Contraseña - Token</h1>
+<section class="heroIndexScreen">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-xl-10">
+                <div class="card" style="border-radius: 1rem;">
+                    <div class="row g-0">
+                        <div
+                            class="col-md-6 col-lg-7 d-flex align-items-center">
+                            <div class="card-body p-4 p-lg-5 text-black">
 
-<form action="/api/session/restore" method="POST" id="restore-password-form">
-<p>Ingresa el codigo que enviamos a tu correo para continuar</p>
-    Codigo de autorizacion: <input type="text" name="token" id="token"><br>
-    Nuevo Password: <input type="password" name="password" id="password"><br>
-    Confirmar Password: <input type="password" name="confirmPassword" id="confirmPassword"><br>
-    <input type="submit" value="Continuar" id="submitToken">
-</form>
+                                <form action="/api/session/restore"
+                                    method="POST"
+                                    id="login-form">
+
+                                    <div
+                                        class="d-flex align-items-center mb-3 pb-1">
+                                        <i class="fas fa-cubes fa-2x me-3"
+                                            style="color: #ff6219;"></i>
+                                        <span class="h1 fw-bold mb-0">Mipekicha
+                                            Digital</span>
+                                    </div>
+
+                                    <h5 class="fw-normal mb-3 pb-3"
+                                        style="letter-spacing: 1px;">
+                                        Recuperar Mi Contraseña - Token
+                                    </h5>
+
+                                    <p class="small text-muted">Ingresa el token
+                                        y tu nueva contraseña</p>
+
+                                    <div class="form-outline mb-4">
+                                        <input type="text"
+                                            class="form-control form-control-lg"
+                                            name="token" id="token" />
+                                        <label class="form-label"
+                                            for="token">Ingresa tu Token</label>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <input type="password"
+                                            class="form-control form-control-lg"
+                                            name="password" id="password" />
+                                        <label class="form-label"
+                                            for="password">Nueva
+                                            Contraseña</label>
+                                    </div>
+
+                                    <div class="form-outline mb-4">
+                                        <input type="password"
+                                            class="form-control form-control-lg"
+                                            name="confirmPassword" id="confirmPassword" />
+                                        <label class="form-label"
+                                            for="confirmPassword">Confirma la contraseña</label>
+                                    </div>
+
+                                    <div class="pt-1 mb-4">
+                                        <button
+                                            class="btn btn-dark btn-lg btn-block"
+                                            type="submit"
+                                            id="submitToken">Restablecer</button>
+                                    </div>
+
+                                    <p class="mb-5 pb-lg-2"
+                                        style="color: #393f81;">¿No tienes
+                                        cuenta?
+                                        <a href="/singup"
+                                            style="color: #393f81;">Registrate
+                                            aqui</a>
+                                    </p>
+                                    <a href="#!" class="small text-muted">Terms
+                                        of use.</a>
+                                    <a href="#!"
+                                        class="small text-muted">Privacy
+                                        policy</a>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

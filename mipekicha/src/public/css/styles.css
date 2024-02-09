@@ -5,3 +5,222 @@ body {
 .paddingFirstSection {
   padding-top: 8rem;
 }
+
+a {
+  text-decoration: none;
+}
+
+.cart {
+  padding-right: 3em;
+}
+.cart button {
+  color: aliceblue;
+  background-color: transparent;
+  border: none;
+}
+
+/**
+* Buttons Section
+*/
+.heroIndexScreen {
+  background: linear-gradient(rgba(12, 12, 12, 0.479), rgba(12, 12, 12, 0.479)), url(https://t4.ftcdn.net/jpg/05/71/83/47/360_F_571834789_ujYbUnH190iUokdDhZq7GXeTBRgqYVwa.jpg);
+  width: 100%;
+  height: 100vh;
+  background-position: center;
+  background-size: cover;
+  color: #ffffff;
+  background-attachment: fixed;
+}
+.registerScreen {
+  background: linear-gradient(rgba(12, 12, 12, 0.479), rgba(12, 12, 12, 0.479)), url(https://t4.ftcdn.net/jpg/05/71/83/47/360_F_571834789_ujYbUnH190iUokdDhZq7GXeTBRgqYVwa.jpg);
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+  color: #ffffff;
+  background-attachment: fixed;
+}
+.backgroundHero {
+  background: linear-gradient(rgba(12, 12, 12, 0.479), rgba(12, 12, 12, 0.479)), url(https://t4.ftcdn.net/jpg/05/71/83/47/360_F_571834789_ujYbUnH190iUokdDhZq7GXeTBRgqYVwa.jpg);
+}
+
+.mainInfo {
+  padding-top: 8em;
+}
+
+.mainText {
+  height: 80vh;
+  width: 100%;
+  justify-content: start;
+  align-items: center;
+}
+
+.cardComponent a {
+  margin: 0 2px 10px 0;
+  color: white;
+  background-color: #529e91;
+  border-radius: 12px;
+  padding: 10px 15px 10px 15px;
+  border-style: solid;
+  border-color: #acfa74;
+}
+.cardComponent a:hover {
+  color: white;
+  background-color: gray;
+  border-color: rgb(176, 231, 204);
+  border-width: 5px;
+}
+.cardComponent .bodyDescription {
+  padding-top: 1em;
+}
+.cardComponent img {
+  width: 262px;
+  height: 244px;
+}
+
+.footerComponent {
+  padding-top: 36px;
+  padding-bottom: 36px;
+}
+
+.fa-facebook-f {
+  color: #529e91;
+}
+
+.fa-instagram {
+  color: blueviolet;
+}
+
+.fa-whatsapp {
+  color: #10b90a;
+}
+
+.fa-tiktok {
+  color: #4f6e58;
+}
+
+.mpk_link_color {
+  color: #5fd3f3;
+}
+.mpk_link_color a {
+  color: #5fd3f3;
+}
+.mpk_link_color a:hover {
+  color: #683e68;
+}
+
+.not-available {
+  color: red;
+  font-weight: bold;
+}
+
+.size-elements {
+  width: 18rem;
+  padding-top: 10px;
+}
+
+/* CART Section */
+.headerSection {
+  height: 15vh;
+  padding-top: 10vh;
+  width: 100%;
+  display: flex;
+}
+.headerSection .headerTitle {
+  width: 100%;
+  height: 100%;
+  justify-content: right;
+  padding-left: 3vh;
+  font-weight: bold;
+  font-size: 2.5vh;
+}
+.headerSection .cart {
+  justify-content: right;
+  padding-right: 3vh;
+}
+.headerSection button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+/*
+Buttons
+*/
+.mpk_button_primary:enabled, .heroIndexScreen .mpk_button_primary:enabled, .registerScreen .mpk_button_primary:enabled, .cardComponent .mpk_button_primary:enabled {
+  margin: 0 2px 10px 0;
+  color: white;
+  background-color: #529e91;
+  border-radius: 12px;
+  padding: 10px 15px 10px 15px;
+  border-style: solid;
+  border-color: #acfa74;
+}
+.mpk_button_primary:enabled:hover {
+  color: white;
+  background-color: gray;
+  border-color: rgb(176, 231, 204);
+  border-width: 5px;
+}
+
+.mpk_button_primary:disabled, .heroIndexScreen .mpk_button_primary:disabled, .registerScreen .mpk_button_primary:disabled, .cardComponent .mpk_button_primary:disabled {
+  margin: 0 2px 10px 0;
+  color: white;
+  background-color: #878f99;
+  border-radius: 12px;
+  padding: 10px 15px 10px 15px;
+  border-style: solid;
+  border-color: #acfa74;
+  opacity: 0.5;
+}
+
+.mpk_button_secondary:enabled, .heroIndexScreen .mpk_button_secondary:enabled, .registerScreen .mpk_button_secondary:enabled {
+  margin: 0 2px 10px 0;
+  color: white;
+  background-color: blueviolet;
+  border-radius: 12px;
+  padding: 10px 15px 10px 15px;
+  border-style: solid;
+  border-color: #acfa74;
+}
+.mpk_button_secondary:enabled:hover {
+  color: white;
+  background-color: gray;
+  border-color: rgb(176, 231, 204);
+  border-width: 5px;
+}
+
+.mpk_button_secondary:disabled, .heroIndexScreen .mpk_button_secondary:disabled, .registerScreen .mpk_button_secondary:disabled {
+  margin: 0 2px 10px 0;
+  color: white;
+  background-color: #878f99;
+  border-radius: 12px;
+  padding: 10px 15px 10px 15px;
+  border-style: solid;
+  border-color: #acfa74;
+  opacity: 0.5;
+}
+
+/*
+    Animation Section
+*/
+.hover-underline-animation {
+  display: inline-block;
+  position: relative;
+}
+.hover-underline-animation:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  transform: scale(0);
+  bottom: 0;
+  left: 0;
+  background-color: #00c3ca;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+.hover-underline-animation:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}

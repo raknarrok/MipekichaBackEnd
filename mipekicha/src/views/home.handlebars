@@ -1,14 +1,18 @@
-<div>
-    <h1>HOME</h1>
-    {{#if user}}
+<div class="row m-auto heroIndexScreen">
+    <div class="text-center mainInfo">
+        <h1>HOME</h1>
+        {{#if user}}
         {{#if user.isAdmin}}
-            <h1> Bienvenido {{user.role}} puedes agregar, remover o actualizar productos</h1>
+        <h2 class="mainText"> Bienvenido {{user.role}} puedes agregar, remover o actualizar
+            productos</h2>
         {{else}}
-            <h1> Bienvenido {{user.first_name}} explora nuestra gran variedad de productos</h1>
+        <h1> Bienvenido {{user.first_name}} explora nuestra gran variedad de
+            productos</h1>
         {{/if}}
-    {{else}}
-        <h1> Registrate o inicia session para poder ver nuestros productos </h1>
-    {{/if}}
+        {{else}}
+        <h1> Inicia session para poder ver nuestros productos, ¿Aun no estas registrado? entra <a href="/singup">aqui</a></h1>
+        {{/if}}
+    </div>
 </div>
 
 <!-- Socket.io -->
