@@ -1,64 +1,96 @@
-<div>
+<section class="registerScreen">
+    <div class="container py-5 h-100 mt-5">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-xl-15">
+                <div class="card" style="border-radius: 1rem;">
+                    <div class="row g-0">
+                        <div
+                            class="col-md-6 col-lg-7 d-flex align-items-center">
+                            <div class="card-body p-1 text-black">
+                                <span id="cartId" style="display: none"
+                                    value="{{cartId}}"></span>
 
-    <h1>Products</h1>
-    <h1> Hola estos son los productos para agregar</h1>
-    <div>
-        <span id="cartId" style="display: none" value="{{cartId}}"></span>
-        Product List:
-        <table class="table table-striped" border="1">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>price</th>
-                    <th>thumbnails</th>
-                    <th>code</th>
-                    <th>stock</th>
-                    <th>category</th>
-                    <th>statusItem</th>
-                    <th>Add To Cart</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each products.payload}}
-                <tr>
-                    <td>{{this._id}}</td>
-                    <td>{{this.title}}</td>
-                    <td>{{this.description}}</td>
-                    <td>{{this.price}}</td>
-                    <td>{{this.thumbnails}}</td>
-                    <td>{{this.code}}</td>
-                    <td>{{this.stock}}</td>
-                    <td>{{this.category}}</td>
-                    <td>{{this.statusItem}}</td>
-                    <td>
-                        <form id="product-add-form" action="/products/{{this._id}}" method="POST">
-                            <button value="{{this._id}}" class="add-button" type="submit">Agregar</button>
-                        </form>
-                    </td>
-                </tr>
-                {{/each}}
-                <div>
-                    Total de productos: {{products.totalDocs}}
+                                    <div
+                                        class="d-flex align-items-center mb-3 pb-1">
+                                        <i class="fas fa-cubes fa-2x me-3"
+                                            style="color: #ff6219;"></i>
+                                        <span
+                                            class="h1 fw-bold mb-0">PRODUCTOS</span>
+                                    </div>
+
+                                    <table
+                                        class="table-responsive table-bordered"
+                                        border="1">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Title</th>
+                                                <th>Description</th>
+                                                <th>price</th>
+                                                <th>thumbnails</th>
+                                                <th>code</th>
+                                                <th>stock</th>
+                                                <th>category</th>
+                                                <th>statusItem</th>
+                                                <th>Add To Cart</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#each products.payload}}
+                                            <tr>
+                                                <td>{{this._id}}</td>
+                                                <td>{{this.title}}</td>
+                                                <td>{{this.description}}</td>
+                                                <td>{{this.price}}</td>
+                                                <td>{{this.thumbnails}}</td>
+                                                <td>{{this.code}}</td>
+                                                <td>{{this.stock}}</td>
+                                                <td>{{this.category}}</td>
+                                                <td>{{this.statusItem}}</td>
+                                                <td>
+                                                    <form id="product-add-form"
+                                                        action="/products/{{this._id}}"
+                                                        method="POST">
+                                                        <button
+                                                            value="{{this._id}}"
+                                                            class="add-button"
+                                                            type="submit">Agregar</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            {{/each}}
+                                            <div>
+                                                Total de productos:
+                                                {{products.totalDocs}}
+                                            </div>
+                                        </tbody>
+                                    </table>
+                                    <div id="paginationSection">
+                                        <div id="paginationButtons">
+                                            {{#if products.hasPrevPage}}
+                                            <a id="previousPageButton"
+                                                class="paginationButton"
+                                                href="{{products.prevLink}}">Previous</a>
+                                            {{/if}}
+                                            {{#if products.hasNextPage}}
+                                            <a id="nextPageButton"
+                                                class="paginationButton"
+                                                href="{{products.nextLink}}">Next</a>
+                                            {{/if}}
+                                        </div>
+                                        <div id="paginationInfo">
+                                            <p>Page {{products.page}} of
+                                                {{products.totalPages}}</p>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </tbody>
-        </table>
-        <div id="paginationSection">
-            <div id="paginationButtons">
-                {{#if products.hasPrevPage}}
-                <a id="previousPageButton" class="paginationButton" href="{{products.prevLink}}">Previous</a>
-                {{/if}}
-                {{#if products.hasNextPage}}
-                <a id="nextPageButton" class="paginationButton" href="{{products.nextLink}}">Next</a>
-                {{/if}}
-            </div>
-            <div id="paginationInfo">
-                <p>Page {{products.page}} of {{products.totalPages}}</p>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <!-- Socket.io -->
 <script src="/socket.io/socket.io.js"></script>
