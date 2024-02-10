@@ -1,41 +1,72 @@
-<div>
-    <h1>Cart Details</h1>
-    <table class="table table-striped" border="1" id="live-products-table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Cantidad</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>price</th>
-                    <th>thumbnails</th>
-                    <th>code</th>
-                    <th>stock</th>
-                    <th>category</th>
-                    <th>statusItem</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each cart.products}}
-                <tr>
-                    <td>{{this.product._id}}</td>
-                    <td>{{this.quantity}}</td>
-                    <td>{{this.product.title}}</td>
-                    <td>{{this.product.description}}</td>
-                    <td>{{this.product.price}}</td>
-                    <td>{{this.product.thumbnails}}</td>
-                    <td>{{this.product.code}}</td>
-                    <td>{{this.product.stock}}</td>
-                    <td>{{this.product.category}}</td>
-                    <td>{{this.product.statusItem}}</td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
+<section class="heroIndexScreen">
+    <div class="container py-5 h-100 mt-5">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-xl-15">
+                <div class="card" style="border-radius: 1rem;">
+                    <div class="row g-0">
+                        <div
+                            class="col-md-6 col-lg-7 d-flex align-items-center">
+                            <div class="card-body p-1 text-black">
+                                <span id="cartId" style="display: none"
+                                    value="{{cartId}}"></span>
 
-        <div class="row">
-            <div class="col-md-12">
-                <a href="/cart/{{cart._id}}/purchase" class="btn btn-primary">Checkout</a>
+                                <div
+                                    class="d-flex align-items-center mb-3 pb-1">
+                                    <i class="fas fa-cubes fa-2x me-3"
+                                        style="color: #ff6219;"></i>
+                                    <span
+                                        class="h1 fw-bold mb-0">CARRITO</span>
+                                </div>
+
+                                <table
+                                    class="table-responsive table-bordered"
+                                    border="1">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Cantidad</th>
+                                            <th>Title</th>
+                                            <th>Description</th>
+                                            <th>price</th>
+                                            <th>thumbnails</th>
+                                            <th>code</th>
+                                            <th>stock</th>
+                                            <th>category</th>
+                                            <th>statusItem</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each cart.products}}
+                                        <tr>
+                                            <td>{{this.product._id}}</td>
+                                            <td>{{this.quantity}}</td>
+                                            <td>{{this.product.title}}</td>
+                                            <td>{{this.product.description}}</td>
+                                            <td>{{this.product.price}}</td>
+                                            <td>{{this.product.thumbnails}}</td>
+                                            <td>{{this.product.code}}</td>
+                                            <td>{{this.product.stock}}</td>
+                                            <td>{{this.product.category}}</td>
+                                            <td>{{this.product.statusItem}}</td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                                <div class="row mt-3">
+                                    <div class="col-md-12">
+                                        <a href="/cart/{{cart._id}}/purchase"
+                                            class="btn btn-primary">Checkout</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-</div>
+    </div>
+</section>
+
+<!-- Socket.io -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/products.js"></script>
