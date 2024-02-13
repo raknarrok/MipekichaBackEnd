@@ -77,10 +77,11 @@ router.get('/products', auth, async (req, res) => {
 router.get('/live-products', auth, async (req, res) => {
 
   try {
+    const userOwner = req.session.user._id
     const userRole = req.session.user.role
 
     // TODO: Create a better way to handle this
-    if (userRole !== 'admin') {
+    if (userRole !== 'admin' && userRole !== 'premium') {
       return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
     }
     const limitQuery = getQueryParam(req.query.limit, 5)
@@ -113,6 +114,7 @@ router.get('/live-products', auth, async (req, res) => {
 
     res.render('realTimeProducts', {
       isAdmin: userRole === 'admin' ? true : false,
+      owner: userOwner,
       products: toPayload,
     })
 

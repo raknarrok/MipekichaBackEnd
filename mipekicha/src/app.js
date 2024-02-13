@@ -1,5 +1,5 @@
 import express from 'express'
-import handlerbars from 'express-handlebars'
+// import handlerbars from 'express-handlebars'
 import __dirname from './utils.js'
 import viewsRoutes from './routes/views.routes.js'
 import productsRoutes from './routes/product.routes.js'
@@ -25,6 +25,8 @@ import errorHandler from './middlewares/error.js'
 import { addLogger, logger } from './middlewares/logger.js'
 import swaggerJSDoc from 'swagger-jsdoc'
 import swaggerUIExpress from 'swagger-ui-express'
+import { engine } from 'express-handlebars'
+import { helpers  } from './utils.js'
 config()
 
 const app = express()
@@ -63,7 +65,11 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // Handlebars configuration
-app.engine('handlebars', handlerbars.engine())
+const handlebars = engine({
+  helpers: helpers
+})
+
+app.engine('handlebars', handlebars)
 app.set('view engine', 'handlebars') // Extencion of these files
 app.set('views', __dirname + '/views') // Indicate the folder where the files are
 

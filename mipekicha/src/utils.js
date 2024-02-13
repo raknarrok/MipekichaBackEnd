@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import { dirname } from 'path'
 import { faker } from '@faker-js/faker'
 
-const __filename = fileURLToPath( import.meta.url)
+const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export default __dirname
@@ -22,6 +22,19 @@ export const generateProduct = () => {
         code: faker.string.alphanumeric({ length: { min: 7, max: 15 } }),
         stock: faker.number.int({ min: 10, max: 100 }),
         category: faker.commerce.department(),
+        owner: faker.string.uuid(),
         statusItem: faker.datatype.boolean()
+    }
+}
+
+export const helpers = {
+    eq: (val1, val2) => {
+
+        if (val1 === undefined || val2 === undefined) {
+            console.error('Both values must be defined');
+            return false;
+        }
+
+        return JSON.stringify(val1) === JSON.stringify(val2)
     }
 }

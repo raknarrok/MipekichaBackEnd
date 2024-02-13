@@ -42,6 +42,7 @@ router.post('/login', passport.authenticate('localPassport', {
     }
 
     req.session.user = {
+        _id: req.user._id,
         first_name: req.user.first_name,
         last_name: req.user.last_name,
         email: req.user.email,
@@ -49,6 +50,7 @@ router.post('/login', passport.authenticate('localPassport', {
         role: req.user.role,
         cart: req.user.cart,
         isAdmin: req.user.role === 'admin' ? true : false,
+        isPremium: req.user.role === 'premium' ? true : false,
         isAuth: true
     }
 
