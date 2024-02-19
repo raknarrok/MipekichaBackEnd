@@ -51,10 +51,17 @@
                                                     <form id="product-add-form"
                                                         action="/products/{{this._id}}"
                                                         method="POST">
+                                                        {{#if (eq this.owner ../owner) }}
+                                                        <button
+                                                            value="{{this._id}}"
+                                                            class="add-button"
+                                                            type="submit" disabled>Agregar</button>
+                                                        {{else}}
                                                         <button
                                                             value="{{this._id}}"
                                                             class="add-button"
                                                             type="submit">Agregar</button>
+                                                        {{/if}}
                                                     </form>
                                                 </td>
                                             </tr>

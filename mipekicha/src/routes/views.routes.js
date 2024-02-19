@@ -27,10 +27,11 @@ router.get('/products', auth, async (req, res) => {
 
   try {
 
+    const userOwner = req.session.user._id
     const userRole = req.session.user.role
 
     // TODO: Create a better way to handle this
-    if (userRole !== 'user') {
+    if (userRole !== 'user' && userRole !== 'premium') {
       return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
     }
     const limitQuery = getQueryParam(req.query.limit, 5)
@@ -62,10 +63,12 @@ router.get('/products', auth, async (req, res) => {
     delete toPayload.pagingCounter
 
     const user = req.session.user
+    console.log('payload product', toPayload)
 
     // This is the name under Views > home.handlebars
     res.render('products', {
       products: toPayload,
+      owner: userOwner,
       cartId: user.cart,
     })
   } catch (error) {
@@ -190,7 +193,7 @@ router.get('/cart/:cid', auth, async (req, res) => {
     const userRole = req.session.user.role
 
     // TODO: Create a better way to handle this
-    if (userRole !== 'user') {
+    if (userRole !== 'user' && userRole !== 'premium') {
       return res.status(403).send({ status: 'Error', error: 'You are not allowed to access this resource' })
     }
     const cartId = req.params.cid

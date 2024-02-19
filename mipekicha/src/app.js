@@ -8,6 +8,7 @@ import ticketRoutes from './routes/ticket.routes.js'
 import sessionRoutes from './routes/session.routes.js'
 import loggerRoutes from './routes/logger.routes.js'
 import mailRoutes from './routes/mailTracker.routes.js'
+import usersRoutes from './routes/users.routes.js'
 import ProductManager from './dao/mongoManager/ProductManager.js'
 import CartManager from './dao/mongoManager/CartManager.js'
 import MessageManager from './dao/mongoManager/MessageManager.js'
@@ -118,6 +119,7 @@ app.use('/api/ticket', ticketRoutes)
 app.use('/api/session', sessionRoutes)
 app.use('/api/loggerTest', loggerRoutes)
 app.use('/api/mail', mailRoutes)
+app.use('/api/users', usersRoutes)
 app.use(addLogger)
 app.use(errorHandler)
 

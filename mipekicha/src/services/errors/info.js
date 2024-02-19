@@ -33,3 +33,19 @@ export const generateMailTrackerErrorInfo = (mailTracker) => {
         - Subject: ${mailTracker?.subject}
         `
 }
+
+export const generateNotFoundById = (pid) => {
+
+    return `
+        Element with ID ${pid} not found
+        `
+}
+
+export const generateEmptyError = (eid, data) => {
+
+    return `
+        Missing data provided
+        - Id: ${eid}
+        - Data: ${data}
+    `
+}

@@ -1,7 +1,7 @@
 import ProductModel from '../mongo/models/product.model.js'
 import { generateProduct } from '../../utils.js'
 import CustomError from '../../services/errors/custom_errors.js'
-import { generateProductErrorInfo } from '../../services/errors/info.js'
+import { generateProductErrorInfo, generateNotFoundById } from '../../services/errors/info.js'
 import EErrors from '../../services/errors/enums.js'
 
 class Product {
@@ -14,6 +14,7 @@ class Product {
         code,
         stock,
         category,
+        owner,
         statusItem = true, // set default value here
     }) => {
         try {
@@ -25,6 +26,7 @@ class Product {
                 code,
                 stock,
                 category,
+                owner,
                 statusItem,
             }
             if (
@@ -116,7 +118,7 @@ class Product {
     }
 
     getProductById = async (pid) => {
-        return await ProductModel.findById(pid).lean().exec()
+            return await ProductModel.findById(pid).lean().exec()
     }
 
     getProductByCode = async (pcode) => {

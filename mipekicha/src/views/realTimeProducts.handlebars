@@ -13,7 +13,6 @@
                     <th>stock</th>
                     <th>category</th>
                     <th>statusItem</th>
-                    <th>TempOwner</th>
                     <th>Eliminar</th>
                 </tr>
             </thead>
@@ -29,7 +28,6 @@
                     <td>{{this.stock}}</td>
                     <td>{{this.category}}</td>
                     <td>{{this.statusItem}}</td>
-                    <td>{{this.owner}}</td>
                     <td>
                         <form id="product-delete-form" action="/products/{{this.code}}" method="POST">
                             {{#if ../isAdmin }}
