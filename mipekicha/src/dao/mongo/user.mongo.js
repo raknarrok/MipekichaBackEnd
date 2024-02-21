@@ -29,6 +29,18 @@ class User {
             console.error(error)
         }
     }
+
+    getAllUsers = async () => {
+        return await UserModel.find().lean().exec()
+    }
+
+    getUserById = async (uid) => {
+        return await UserModel.findById(uid).lean().exec()
+    }
+
+    getUserByEmail = async (email) => {
+        return await UserModel.findOne({ email: email }).lean().exec()
+    }
 }
 
 export default User
