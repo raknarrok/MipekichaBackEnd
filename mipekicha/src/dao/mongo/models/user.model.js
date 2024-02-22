@@ -21,8 +21,11 @@ const userSchema = new mongoose.Schema({
         default: 'user'
     },
     last_connection: {
-        type: Date,
-        default: Date.now
+        type: Date
+    },
+    status: {
+        type: Boolean,
+        default: false
     }
 })
 

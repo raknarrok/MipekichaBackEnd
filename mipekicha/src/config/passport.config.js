@@ -50,10 +50,14 @@ const initializePassport = () => {
 
             if (!isValidPassword(user, password)) return done(null, false)
 
+            let currentDateTime = new Date()
+
+            await userModel.findOneAndUpdate({ email: username }, { last_connection: currentDateTime })
+
             return done(null, user)
         } catch (err) {
             return done(err)
-         }
+        }
     }))
 
     passport.use('github', new GitHubStrategy(

@@ -41,6 +41,8 @@ router.post('/login', passport.authenticate('localPassport', {
         return res.status(400).send({ status: 'Error', error: 'Invalid credentials' })
     }
 
+    let currentDateTime = new Date()
+
     req.session.user = {
         _id: req.user._id,
         first_name: req.user.first_name,
@@ -49,6 +51,8 @@ router.post('/login', passport.authenticate('localPassport', {
         age: req.user.age,
         role: req.user.role,
         cart: req.user.cart,
+        last_connection: currentDateTime,
+        status: req.user.status,
         isAdmin: req.user.role === 'admin' ? true : false,
         isPremium: req.user.role === 'premium' ? true : false,
         isAuth: true
